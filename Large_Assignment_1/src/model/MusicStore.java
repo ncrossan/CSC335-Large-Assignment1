@@ -3,6 +3,8 @@
  * CSC 335 - Large Assignment 1
  * Description: The class MusicStore 
  * */
+package model;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
