@@ -1,5 +1,7 @@
 package model;
 
-public class Album {
+import java.util.ArrayList;
 
+public class Album {
+	
 }
