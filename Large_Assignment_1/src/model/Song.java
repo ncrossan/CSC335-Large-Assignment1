@@ -1,14 +1,15 @@
 /* Author: Nathan Crossman, Andy Zhang
  * Course: CSC 335
  * Description: An instance of this class represents a Song.
+ * NOTE: THIS CLASS IS IMMUTABLE
  */
 
 package model;
 
 final class Song {
 	// instance variables
-	private String title;
-	private String artist;
+	private final String title;
+	private final String artist;
 	// constructor
 	public Song(String title, String artist) {
 		this.title = title;
