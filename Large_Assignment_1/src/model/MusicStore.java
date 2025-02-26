@@ -12,12 +12,12 @@ class MusicStore {
 	// constructor method
 	public MusicStore() throws FileNotFoundException {
 		// load albums and songs from text files
-		File directory = new File("Large_Assignment_1/albums");
+		File directory = new File("src/albums");
 		albumList = new ArrayList<Album>();
 		
 		// loop through text files
 		for (File file : directory.listFiles()) {
-			if (file.getName().equals("albums.txt")) { continue; }
+			if (file.getName().equals("albums.txt")) { continue; } // skip albums file
 			Scanner fileReader = new Scanner(file);
 			parseFile(fileReader);
 			
