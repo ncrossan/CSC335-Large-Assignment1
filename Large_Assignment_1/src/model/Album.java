@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public class Album {
+class Album {
 	private ArrayList<Song> songList;
 	private String title;
 	private String artist;

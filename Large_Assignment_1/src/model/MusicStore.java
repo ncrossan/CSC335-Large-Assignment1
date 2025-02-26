@@ -40,5 +40,43 @@ class MusicStore {
 		}
 	}
 	
+	public Album getAlbumByName() {
+		
+	}
 	
+	public Song getSongByName() {
+		
+	}
+	
+	public Album getAlbumByArtist() {
+		
+	}
+	
+	public Song getSongByArtist() {
+		
+	}
+	
+	public Album getAlbumGenre() {
+		
+	}
+	
+	public Song getSongGenre() {
+		
+	}
+	
+	public boolean searchAlbum() {
+		
+	}
+	
+	public boolean searchSong() {
+		
+	}
+	
+	public boolean searchArtist() {
+		
+	}
+	
+	public boolean searchGenre() {
+		
+	}
 }
