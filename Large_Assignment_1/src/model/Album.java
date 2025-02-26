@@ -1,14 +1,20 @@
+/* Author: Nathan Crossman, Andy Zhang
+ * Course: CSC 335
+ * Description: An instance of this class represents an Album.
+ */
 package model;
 
 import java.util.ArrayList;
 
 class Album {
+	// instance variables
 	private ArrayList<Song> songList;
 	private String title;
 	private String artist;
 	private String genre;
 	private int year;
 	
+	// constructor
 	public Album(String title, String artist, String genre, int year) {
 		this.title = title;
 		this.artist = artist;
@@ -18,10 +24,12 @@ class Album {
 		songList = new ArrayList<Song>();
 	}
 	
+	// This method adds a Song to the songList ArrayList
 	public void addSong(Song song) {
 		songList.add(song);
 	}
 	
+	// Getters
 	public String getTitle() {
 		return title;
 	}
@@ -30,8 +38,14 @@ class Album {
 		return artist;
 	}
 	
+	@Override
 	public String toString() {
-		return " ";
+		String result = title + ", " + artist + ", " + genre + ", " + year + "\n";
+		for (Song s: songList) {
+			result += s + ", ";
+		}
+		result = result.substring(0, result.length()-2);
+		return result;
 	}
 	
 }
