@@ -9,12 +9,6 @@ class Song {
 		this.artist = artist;
 	}
 	
-	// copy constructor
-	public Song(Song song) {
-		title = song.getTitle();
-		artist = song.getArtist();
-	}
-	
 	public String getTitle() {
 		return title;
 	}

@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,12 +24,11 @@ class MusicStore {
 		}
 	}
 	
-	// method that reads the text files and loads the Album and Song objects in the albumLis
+	// method that reads the text files and loads the Album and Song objects in the albumList
 	private void parseFile(Scanner fileReader) {
 		String[] textHeader = fileReader.nextLine().split(",");
 		String artist = textHeader[1]; // get artist name
-		Album album = new Album(textHeader[0], textHeader[1],
-								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
+		Album album = new Album(textHeader[0], textHeader[1]); // create album object
 		albumList.add(album);
 		
 		// add list of songs to album
@@ -41,32 +39,44 @@ class MusicStore {
 		}
 	}
 	
-	public Album getAlbumByName() {
-		
+	public Album getAlbumByTitle(String title) {
+		for (Album album : albumList) {
+			if (album.getTitle().toLowerCase().equals(title.toLowerCase())) {
+				return new Album(album);
+			}
+		}
+		return null;
 	}
 	
-	public Song getSongByName() {
-		
+	public Song getSongByTitle(String title){
+		for (Album album : albumList) {
+			for (Song song : album.getSongList()) {
+				if (song.getTitle().toLowerCase().equals(title.toLowerCase())) {
+					return song;
+				}
+			} // inner for loop ends
+		} // outer for loop ends
+		return null;
 	}
 	
-	public Album getAlbumByArtist() {
-		
+	public Album getAlbumByArtist(String artist) {
+		for (Album album : albumList) {
+			if (album.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+				return new Album(album);
+			}
+		}
+		return null;
 	}
 	
-	public Song getSongByArtist() {
-		
-	}
-	
-	public boolean searchAlbum() {
-		
-	}
-	
-	public boolean searchSong() {
-		
-	}
-	
-	public boolean searchArtist() {
-		
+	public Song getSongByArtist(String artist) {
+		for (Album album : albumList) {
+			for (Song song : album.getSongList()) {
+				if (song.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+					return song;
+				}
+			} // inner for loop ends
+		} // outer for loop ends
+		return null;
 	}
 	
 }
