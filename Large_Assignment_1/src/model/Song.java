@@ -10,17 +10,13 @@ final class Song {
 	// instance variables
 	private final String title;
 	private final String artist;
+	
 	// constructor
 	public Song(String title, String artist) {
 		this.title = title;
 		this.artist = artist;
 	}
 	
-	// copy constructor
-	public Song(Song song) {
-		title = song.getTitle();
-		artist = song.getArtist();
-	}
 	// Getters
 	public String getTitle() {
 		return title;
