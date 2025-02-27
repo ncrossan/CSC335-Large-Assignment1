@@ -1,6 +1,11 @@
+/* Author: Nathan Crossman, Andy Zhang
+ * Course: CSC 335
+ * Description: An instance of this class represents a Music Store.
+ */
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,12 +28,14 @@ class MusicStore {
 			fileReader.close();
 		}
 	}
-	
-	// method that reads the text files and loads the Album and Song objects in the albumList
+	/* parses each album text file and creates song and album objects to put them in the music
+	 * store.
+	 */
 	private void parseFile(Scanner fileReader) {
 		String[] textHeader = fileReader.nextLine().split(",");
 		String artist = textHeader[1]; // get artist name
-		Album album = new Album(textHeader[0], textHeader[1]); // create album object
+		Album album = new Album(textHeader[0], textHeader[1],
+								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
 		albumList.add(album);
 		
 		// add list of songs to album
@@ -130,45 +137,26 @@ class MusicStore {
 		if (message.equals("")) message += "Song not found!";
 		return message;
 	}
-  
-	public Album getAlbumByTitle(String title) {
-		for (Album album : albumList) {
-			if (album.getTitle().toLowerCase().equals(title.toLowerCase())) {
-				return new Album(album);
+	
+	public Song getSong(String title, String artist) {
+		for (Album a : albumList) {
+			for (Song s : a.getSongs()) {
+				if (title.equals(s.getTitle()) && artist.equals(s.getArtist())) {
+					// escaping reference is not a problem because Song is immutable
+					return s;
+				}
 			}
 		}
 		return null;
 	}
 	
-	public Song getSongByTitle(String title){
-		for (Album album : albumList) {
-			for (Song song : album.getSongList()) {
-				if (song.getTitle().toLowerCase().equals(title.toLowerCase())) {
-					return song;
-				}
-			} // inner for loop ends
-		} // outer for loop ends
-		return null;
-	}
-	
-	public Album getAlbumByArtist(String artist) {
-		for (Album album : albumList) {
-			if (album.getArtist().toLowerCase().equals(artist.toLowerCase())) {
-				return new Album(album);
+	public Album getAlbum(String title, String artist) {
+		for (Album a : albumList) {
+			if (title.equals(a.getTitle()) && artist.equals(a.getArtist())) {
+				// deeper copy is not needed because Song is immutable
+				return new Album(a);
 			}
 		}
 		return null;
 	}
-	
-	public Song getSongByArtist(String artist) {
-		for (Album album : albumList) {
-			for (Song song : album.getSongList()) {
-				if (song.getArtist().toLowerCase().equals(artist.toLowerCase())) {
-					return song;
-				}
-			} // inner for loop ends
-		} // outer for loop ends
-		return null;
-	}
-	
 }

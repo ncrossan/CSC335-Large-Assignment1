@@ -3,6 +3,7 @@
  * Description: An instance of this class represents a PlayList.
  */
 package model;
+
 import java.util.ArrayList;
 
 class PlayList {
@@ -20,14 +21,24 @@ class PlayList {
 	public void addSong(Song song) {
 		songs.add(song);
 	}
+	// removes a song from the songs ArrayList
+	public void removeSong(Song song) {
+		songs.remove(song);
+	}
+	
+	// returns the name of the PlayList
+	public String getName() {
+		return name;
+	}
+	
 	
 	@Override
 	public String toString() {
 		String result = name + "\n";
 		for (Song s : songs) {
-			result += s + ", ";
+			result += s.toString() + ", ";
 		}
 		result = result.substring(0, result.length()-2);
-		return result;
+		return result + "\n";
 	}
 }
