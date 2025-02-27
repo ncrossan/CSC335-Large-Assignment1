@@ -22,10 +22,11 @@ class Album {
 	
 	// copy constructor
 	public Album(Album album) {
-		this.title = album.getTitle();
-		this.artist = album.getArtist();
-		
-		this.songList = album.getSongList();
+		title = album.getTitle();
+		artist = album.getArtist();
+		genre = album.getGenre();
+		year = album.getYear();
+		songList = album.getSongs();
 	}
 	
 	//This method adds a Song to the songList ArrayList
@@ -37,9 +38,18 @@ class Album {
 	public String getTitle() {
 		return title;
 	}
-	
 	public String getArtist() {
 		return artist;
+	}
+	public String getGenre() {
+		return genre;
+	}
+	public int getYear() {
+		return year;
+	}
+	// deeper copy is not needed because Song is immutable
+	public ArrayList<Song> getSongs() {
+		return new ArrayList<Song>(songList);
 	}
 	
 	public ArrayList<Song> getSongList() {
@@ -50,10 +60,10 @@ class Album {
 	public String toString() {
 		String result = title + ", " + artist + "\n";
 		for (Song s: songList) {
-			result += s + ", ";
+			result += s.getTitle() + ", ";
 		}
 		result = result.substring(0, result.length()-2);
-		return result;
+		return result + "\n";
 	}
 	
 }
