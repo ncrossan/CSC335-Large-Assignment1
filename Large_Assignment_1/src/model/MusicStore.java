@@ -25,6 +25,7 @@ class MusicStore {
 		}
 	}
 	
+	// method that reads the text files and loads the Album and Song objects in the albumLis
 	private void parseFile(Scanner fileReader) {
 		String[] textHeader = fileReader.nextLine().split(",");
 		String artist = textHeader[1]; // get artist name
@@ -56,14 +57,6 @@ class MusicStore {
 		
 	}
 	
-	public Album getAlbumGenre() {
-		
-	}
-	
-	public Song getSongGenre() {
-		
-	}
-	
 	public boolean searchAlbum() {
 		
 	}
@@ -76,7 +69,4 @@ class MusicStore {
 		
 	}
 	
-	public boolean searchGenre() {
-		
-	}
 }

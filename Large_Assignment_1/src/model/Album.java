@@ -18,6 +18,11 @@ class Album {
 		songList = new ArrayList<Song>();
 	}
 	
+	// copy constructor
+	public Album(Album album) {
+		
+	}
+	
 	public void addSong(Song song) {
 		songList.add(song);
 	}
