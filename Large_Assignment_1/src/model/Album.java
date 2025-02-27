@@ -11,15 +11,11 @@ class Album {
 	private ArrayList<Song> songList;
 	private String title;
 	private String artist;
-	private String genre;
-	private int year;
 	
 	// constructor
-	public Album(String title, String artist, String genre, int year) {
+	public Album(String title, String artist) {
 		this.title = title;
 		this.artist = artist;
-		this.genre = genre;
-		this.year = year;
 		
 		songList = new ArrayList<Song>();
 	}
@@ -33,7 +29,7 @@ class Album {
 		songList = album.getSongs();
 	}
 	
-	// This method adds a Song to the songList ArrayList
+	//This method adds a Song to the songList ArrayList
 	public void addSong(Song song) {
 		songList.add(song);
 	}
@@ -56,9 +52,13 @@ class Album {
 		return new ArrayList<Song>(songList);
 	}
 	
+	public ArrayList<Song> getSongList() {
+		return new ArrayList<Song>(songList);
+	}
+
 	@Override
 	public String toString() {
-		String result = title + ", " + artist + ", " + genre + ", " + year + "\n";
+		String result = title + ", " + artist + "\n";
 		for (Song s: songList) {
 			result += s.getTitle() + ", ";
 		}
