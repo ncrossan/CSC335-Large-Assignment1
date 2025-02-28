@@ -1,166 +1,313 @@
-/* Author: Nathan Crossman, Andy Zhang
- * Course: CSC 335
- * Description: An instance of this class represents a Music Store.
- */
-package model;
+package view;
+import model.LibraryModel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import java.io.File;
+
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
-class MusicStore {
-	private ArrayList<Album> albumList;
+public class View {
+	private LibraryModel library;
 	
-	// constructor method
-	public MusicStore() throws FileNotFoundException {
-		// load albums and songs from text files
-		File directory = new File("src/albums");
-		albumList = new ArrayList<Album>();
+	// Prompt the user for input using a makeshift menu.
+	public static void promptUser() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		Scanner scanner = new Scanner(System.in);
 		
-		// loop through text files
-		for (File file : directory.listFiles()) {
-			if (file.getName().equals("albums.txt")) { continue; } // skip albums file
-			Scanner fileReader = new Scanner(file);
-			parseFile(fileReader);
-			
-			fileReader.close();
-		}
-	}
-	/* parses each album text file and creates song and album objects to put them in the music
-	 * store.
-	 */
-	private void parseFile(Scanner fileReader) {
-		String[] textHeader = fileReader.nextLine().split(",");
-		String artist = textHeader[1]; // get artist name
-		String albumTitle = textHeader[0];
-		Album album = new Album(albumTitle, textHeader[1],
-								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
-		albumList.add(album);
+        while (true) {
+            System.out.println("\n===== Music Library System =====");
+            System.out.println("1. Search in Music Store");
+            System.out.println("2. Search in User Library");
+            System.out.println("3. Add to Library");
+            System.out.println("4. Get Lists from Library");
+            System.out.println("5. Manage Playlists");
+            System.out.println("6. Mark a Song as Favorite");
+            System.out.println("7. Rate a Song");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice with a number: ");
+            
+            String choice = scanner.nextLine();
+            
+            switch (choice) {
+            case "1":
+                searchMusicStore(library, scanner);
+                break;
+
+            case "2":
+                searchUserLibrary(library, scanner);
+                break;
+
+            case "3":
+                addToLibrary(library, scanner);
+                break;
+
+            case "4":
+                getListsFromLibrary(library);
+                break;
+
+            case "5":
+                managePlaylists(library, scanner);
+                break;
+
+            case "6":
+                markFavorite(library, scanner);
+                break;
+
+            case "7":
+                rateSong(library, scanner);
+                break;
+
+            case "8":
+                System.out.println("Exiting...");
+                scanner.close();
+                return;
+
+            default:
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
 		
-		// add list of songs to album
-		while (fileReader.hasNextLine()) {
-			String songName = fileReader.nextLine(); // read song names from file
-			Song song = new Song(songName, artist, albumTitle); // create song object
-			album.addSong(song);
-		}
 	}
+    // Search in Music Store
+    private static void searchMusicStore(LibraryModel library, Scanner scanner) {
+        System.out.println("\n===== Search Music Store =====");
+        System.out.println("1. Search for a song by title");
+        System.out.println("2. Search for a song by artist");
+        System.out.println("3. Search for an album by title");
+        System.out.println("4. Search for an album by artist");
+        System.out.print("Enter your choice with a number: ");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.println(library.searchStoreSongByTitle(songTitle));
+                break;
+
+            case "2":
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                System.out.println(library.searchStoreSongByArtist(artist));
+                break;
+
+            case "3":
+                System.out.print("Enter album title: ");
+                String albumTitle = scanner.nextLine();
+                System.out.println(library.searchStoreAlbumByTitle(albumTitle));
+                break;
+
+            case "4":
+                System.out.print("Enter artist: ");
+                String albumArtist = scanner.nextLine();
+                System.out.println(library.searchStoreAlbumByArtist(albumArtist));
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+    
+    // Search in User Library
+    private static void searchUserLibrary(LibraryModel library, Scanner scanner) {
+        System.out.println("\n===== Search User Library =====");
+        System.out.println("1. Search for a song by title");
+        System.out.println("2. Search for a song by artist");
+        System.out.println("3. Search for an album by title");
+        System.out.println("4. Search for an album by artist");
+        System.out.println("5. Search for a playlist by name");
+        System.out.print("Enter your choice with a number: ");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.println(library.searchSongByTitle(songTitle));
+                break;
+
+            case "2":
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                System.out.println(library.searchSongByArtist(artist));
+                break;
+
+            case "3":
+                System.out.print("Enter album title: ");
+                String albumTitle = scanner.nextLine();
+                System.out.println(library.searchAlbumByTitle(albumTitle));
+                break;
+
+            case "4":
+                System.out.print("Enter artist: ");
+                String albumArtist = scanner.nextLine();
+                System.out.println(library.searchAlbumByArtist(albumArtist));
+                break;
+
+            case "5":
+                System.out.print("Enter playlist name: ");
+                String playlistName = scanner.nextLine();
+                System.out.println(library.searchPlayListByName(playlistName));
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    // Add to Library
+    private static void addToLibrary(LibraryModel library, Scanner scanner) {
+        System.out.println("\n===== Add to Library =====");
+        System.out.println("1. Add a song to the library");
+        System.out.println("2. Add an album to the library");
+        System.out.print("Enter your choice: ");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                System.out.println(library.addSong(songTitle, artist));
+                break;
+
+            case "2":
+                System.out.print("Enter album title: ");
+                String albumTitleInput = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artistInput = scanner.nextLine();
+                System.out.println(library.addAlbum(albumTitleInput, artistInput));
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    // Get Lists from Library
+    private static void getListsFromLibrary(LibraryModel library) {
+        System.out.println("\n===== Library Lists =====");
+        System.out.println("1. List of song titles");
+        System.out.println("2. List of artists");
+        System.out.println("3. List of albums");
+        System.out.println("4. List of playlists");
+        System.out.println("5. List of favorite songs");
+        System.out.print("Enter your choice: ");
+
+        Scanner scanner = new Scanner(System.in);
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.println(library.getSongs());
+                break;
+
+            case "2":
+                System.out.println(library.getArtists());
+                break;
+
+            case "3":
+                System.out.println(library.getAlbums());
+                break;
+
+            case "4":
+                System.out.println(library.getPlayLists());
+                break;
+
+            case "5":
+                System.out.println(library.getFavorites());
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    // Manage Playlists REMEBER TO UPDATE !!!!
+    private static void managePlaylists(LibraryModel library, Scanner scanner) {
+        System.out.println("\n===== Manage Playlists =====");
+        System.out.println("1. Create a new playlist");
+        System.out.println("2. Add a song to a playlist");
+        System.out.println("3. Remove a song from a playlist");
+        System.out.print("Enter your choice: ");
+
+        String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.print("Enter playlist name: ");
+                String playlistName = scanner.nextLine();
+                // create a new playlist with the name
+                library.addPlayList(playlistName);
+                System.out.println("Playlist created: " + playlistName);
+                break;
+
+            case "2":
+                System.out.print("Enter playlist name: ");
+                String addPlaylistName = scanner.nextLine();
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                library.addSongToPlayList(addPlaylistName, songTitle, artist);
+                System.out.println("Song added to playlist: " + addPlaylistName);
+                break;
+
+            case "3":
+                System.out.print("Enter playlist name: ");
+                String removePlaylistName = scanner.nextLine();
+                System.out.print("Enter song title: ");
+                String removeSongTitle = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String removeArtist = scanner.nextLine();
+                // Implement removing song from playlist logic here
+                library.removeSongFromPlayList(removePlaylistName, removeSongTitle, removeArtist);
+                System.out.println("Song removed from playlist: " + removePlaylistName);
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    // Mark a Song as Favorite
+    private static void markFavorite(LibraryModel library, Scanner scanner) {
+        System.out.print("Enter song title: ");
+        String title = scanner.nextLine();
+        System.out.print("Enter artist: ");
+        String artist = scanner.nextLine();
+        System.out.println(library.favorite(title, artist));
+    }
+
+    // Rate a Song
+    private static void rateSong(LibraryModel library, Scanner scanner) {
+        System.out.println("Enter song title: ");
+        String title = scanner.nextLine();
+        System.out.println("Enter artist: ");
+        String artist = scanner.nextLine();
+        Integer rating = null;
+        // error checking
+        while (rating == null) {
+            System.out.println("Enter rating (1-5): ");
+            try {
+                rating = Integer.valueOf(scanner.nextLine());
+                if (rating < 1 || rating > 5) {
+                    System.out.println("Rating must be between 1 and 5. Try again.");
+                    rating = null;  // reset rating to force the loop to repeat
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number between 1 and 5.");
+            }
+        }
+        System.out.println(library.addRating(title, artist, rating));
+    }
 	
-	/* This method searches the MusicStore for an Album given a String of
-	 * the title of an album. Returns the Album's information and songs if
-	 * it is found, otherwise return a message indicating nothing was found.
-	 * Arguments:
-	 * 		title: a string of the title of the album to search for
-	 * Returns:
-	 * 		message: an Album's information and the songs in it or a message indicating
-	 * 		nothing was found
-	 */
-	public String searchAlbumByTitle(String title) {
-		String message = "";
-		// loop through every album in albumList to find the album(s) matching the title
-		for (Album a : albumList) {
-			if (a.getTitle().toLowerCase().equals(title.toLowerCase())) {
-				return a.toString();
-			}
-		}
-		// if no albums are found, set message to "Album not found!"
-		if (message.equals("")) message += "Album not found!";
-		return message;
-	}
-	/* This method searches the MusicStore for an Album given a String of
-	 * the name of an artist. Returns the Album's information and songs if
-	 * it is found, otherwise return a message indicating nothing was found.
-	 * Arguments:
-	 * 		name: a string of the name of the artist to search for
-	 * Returns:
-	 * 		message: an Album's information and the songs in it or a message indicating
-	 * 		nothing was found
-	 */
-	public String searchAlbumByArtist(String artist) {
-		String message = "";
-		// loop through every album in albumList to find the album(s) from the artist
-		for (Album a : albumList) {
-			if (a.getArtist().toLowerCase().equals(artist.toLowerCase())) {
-				message += a.toString();
-			}
-		}
-		// if no albums are found, set message to "Album not found!"
-		if (message.equals("")) message += "Album not found!";
-		return message;
-	}
-	
-	/* This method searches through every Song in the MusicStore for a song
-	 * matching the name argument, any songs will be returned with their
-	 * title, artist, and the album they are in.
-	 * Arguments:
-	 * 		name: a string of a name of a song
-	 * Returns:
-	 * 		message: a string of every found song's information or a string
-	 * 		detailing that nothing was found
-	 */
-	public String searchSongByTitle(String title) {
-		String message = "";
-		// loop through every album in albumList and every song in each album
-		// to find songs matching the title of the argument
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
-					message += s.toString() +  " in " + a.getTitle() + "\n";
-				}
-			}
-		}
-		// if no songs are found, set message to "Song not found!"
-		if (message.equals("")) message += "Song not found!";
-		return message;
-	}
-	/* This method searches through every Song in the MusicStore for a song
-	 * matching the title argument, any songs will be returned with their
-	 * title, artist, and the album they are in.
-	 * Arguments:
-	 * 		name: a string of an artist's name
-	 * Returns:
-	 * 		message: a string of every found song's information or a string
-	 * 		detailing that nothing was found
-	 */
-	public String searchSongByArtist(String artist) {
-		String message = "";
-		// loop through every album in albumList and every song in each album
-		// to find songs matching the artist of the argument
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-					message += s.toString() + " in " + a.getTitle() + "\n";
-				}
-			}
-		}
-		// if no songs are found, set message to "Song not found!"
-		if (message.toLowerCase().equals("")) message += "Song not found!";
-		return message;
-	}
-	
-	// limited scope so only the model can use this method
-	Song getSong(String title, String artist) {
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (title.toLowerCase().equals(s.getTitle().toLowerCase()) && 
-						artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-					// escaping reference is not a problem because Song is immutable
-					return s;
-				}
-			}
-		}
-		return null;
-	}
-	// limited scope so only the model can use this method
-	Album getAlbum(String title, String artist) {
-		for (Album a : albumList) {
-			if (title.toLowerCase().equals(a.getTitle().toLowerCase()) && 
-					artist.toLowerCase().equals(a.getArtist().toLowerCase())) {
-				// deeper copy is not needed because Song is immutable
-				return new Album(a);
-			}
-		}
-		return null;
+	public static void main(String[] args) throws FileNotFoundException {
+		promptUser();
+		// after the end of the user input, end the program
+		System.exit(0);
 	}
 }
