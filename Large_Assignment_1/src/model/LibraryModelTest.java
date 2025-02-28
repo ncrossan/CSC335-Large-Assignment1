@@ -38,8 +38,8 @@ class LibraryModelTest {
 	@Test
 	void testAddSong() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
-		assertEquals(library.addSong("Rolling in the Deep", "Adele", "21"), "added Rolling in the Deep by Adele to library");
-		assertEquals(library.addSong("Hello", "Adele", "21"), "Song not found in Music Store!");
+		assertEquals(library.addSong("Rolling in the Deep", "Adele"), "added Rolling in the Deep by Adele to library");
+		assertEquals(library.addSong("Hello", "Adele"), "Song not found in Music Store!");
 	}
 	
 	@Test
@@ -52,9 +52,9 @@ class LibraryModelTest {
 	@Test
 	void testAddRating() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
-		library.addSong("Lovesong", "Adele", "21");
+		library.addSong("Lovesong", "Adele");
 		assertEquals(library.addRating("Lovesong", "Adele", 4), "Lovesong by Adele was rated 4");
-		library.addSong("He Won't Go", "Adele", "21");
+		library.addSong("He Won't Go", "Adele");
 		library.addRating("He Won't Go", "Adele", 5);
 		assertEquals(library.getFavorites(), "favorites\nHe Won't Go by Adele\n");
 	}
@@ -63,7 +63,7 @@ class LibraryModelTest {
 	void testFavorite() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.favorite("Hello", "Adele"), "Song was not found in the library!");
-		library.addSong("Lovesong", "Adele", "21");
+		library.addSong("Lovesong", "Adele");
 		assertEquals(library.favorite("Lovesong", "Adele"), "added Lovesong by Adele to favorites");
 	}
 	
@@ -71,7 +71,7 @@ class LibraryModelTest {
 	void testGetSongs() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.getSongs(), "No songs in library yet!");
-		library.addSong("Lovesong", "Adele", "21");
+		library.addSong("Lovesong", "Adele");
 		assertEquals(library.getSongs(), "Songs in library:\nLovesong\n");
 		
 	}
@@ -119,9 +119,29 @@ class LibraryModelTest {
 	@Test
 	void testGetFavorites() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
-		library.addSong("Lovesong", "Adele", "21");
+		library.addSong("Lovesong", "Adele");
 		library.favorite("Lovesong", "Adele");
 		assertEquals(library.getFavorites(), "favorites\nLovesong by Adele\n");
+	}
+	
+	@Test
+	void testSearchSongByTitle() {
+		
+	}
+	
+	@Test
+	void testSearchSongByArtist() {
+		
+	}
+	
+	@Test
+	void testSearchAlbumByTitle() {
+		
+	}
+	
+	@Test
+	void testSearchAlbumByArtist() {
+		
 	}
 
 }

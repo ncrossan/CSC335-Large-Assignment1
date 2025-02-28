@@ -66,7 +66,7 @@ public class LibraryModel {
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) {
 				Song song = musicStore.getSong(title, artist);
-				if (song != null) {
+				if (song != null && songs.contains(song) && !(p.getPlayList().contains(song))) {
 					p.addSong(song);
 					return "Song added!";
 				}
@@ -80,7 +80,7 @@ public class LibraryModel {
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) {
 				Song song = musicStore.getSong(title, artist);
-				if (song != null) {
+				if (song != null && songs.contains(song)) {
 					p.removeSong(song);
 					return "Song removed!";
 				}
@@ -90,8 +90,9 @@ public class LibraryModel {
 		return "Couldn't perform operation.";
 	}
 	
-	public String addSong(String title, String artist, String albumTitle) {
+	public String addSong(String title, String artist) {
 		Song song = musicStore.getSong(title, artist);
+		if (songs.contains(song)) return "Song is already in library";
 		if (song != null) {
 			songs.add(musicStore.getSong(title, artist));			
 			return "added " + song.toString() + " to library";
@@ -101,11 +102,12 @@ public class LibraryModel {
 	
 	public String addAlbum(String title, String artist) {
 		Album album = musicStore.getAlbum(title, artist);
+		if (albums.contains(album)) return "Album is already in library";
 		if (album != null) {
 			albums.add(album);
 			// add the songs in the albums to the songs arraylist
 			for (Song s : album.getSongs()) {
-				songs.add(s);
+				if (!songs.contains(s)) songs.add(s);	
 			}
 			return "added " + album.getTitle() + " by " + album.getArtist() + " to library";
 		}
@@ -126,7 +128,8 @@ public class LibraryModel {
 	
 	public String favorite(String title, String artist) {
 		Song song = musicStore.getSong(title, artist);
-		if (song != null) {
+		if (favorites.getPlayList().contains(song)) return "Song is already in favorites";
+		if (song != null && songs.contains(song)) {
 			favorites.addSong(song);
 			return "added " + song.toString() + " to favorites";
 		}
@@ -215,6 +218,23 @@ public class LibraryModel {
 		}
 		if (result.equals("")) return artist + " not found in library";
 		return result;
+	}
+	
+	// call the methods of musicStore to search it
+	public String searchStoreSongByArtist(String artist) {
+		return musicStore.searchSongByArtist(artist);
+	}
+	
+	public String searchStoreSongByTitle(String title) {
+		return musicStore.searchSongByTitle(title);
+	}
+	
+	public String searchStoreAlbumByArtist(String artist) {
+		return musicStore.searchAlbumByArtist(artist);
+	}
+	
+	public String searchStoreAlbumByTitle(String title) {
+		return musicStore.searchAlbumByTitle(title);
 	}
 	
 }
