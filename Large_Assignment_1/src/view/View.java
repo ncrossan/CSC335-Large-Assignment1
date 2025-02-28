@@ -8,11 +8,10 @@ import java.util.Scanner;
 public class View {
 	private LibraryModel library;
 	
-	// to be implemented.. prompt user for input
+	// Prompt the user for input using a makeshift menu.
 	public static void promptUser() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		Scanner scanner = new Scanner(System.in);
-		
 		
         while (true) {
             System.out.println("\n===== Music Library System =====");
@@ -24,39 +23,40 @@ public class View {
             System.out.println("6. Mark a Song as Favorite");
             System.out.println("7. Rate a Song");
             System.out.println("8. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.print("Enter your choice with a number: ");
             
-            int choice = scanner.nextInt();
+            String choice = scanner.nextLine();
+            
             switch (choice) {
-            case 1:
+            case "1":
                 searchMusicStore(library, scanner);
                 break;
 
-            case 2:
+            case "2":
                 searchUserLibrary(library, scanner);
                 break;
 
-            case 3:
+            case "3":
                 addToLibrary(library, scanner);
                 break;
 
-            case 4:
+            case "4":
                 getListsFromLibrary(library);
                 break;
 
-            case 5:
+            case "5":
                 managePlaylists(library, scanner);
                 break;
 
-            case 6:
+            case "6":
                 markFavorite(library, scanner);
                 break;
 
-            case 7:
+            case "7":
                 rateSong(library, scanner);
                 break;
 
-            case 8:
+            case "8":
                 System.out.println("Exiting...");
                 scanner.close();
                 return;
@@ -74,31 +74,30 @@ public class View {
         System.out.println("2. Search for a song by artist");
         System.out.println("3. Search for an album by title");
         System.out.println("4. Search for an album by artist");
-        System.out.print("Enter your choice: ");
+        System.out.print("Enter your choice with a number: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
+        String choice = scanner.nextLine();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
                 System.out.println(library.searchStoreSongByTitle(songTitle));
                 break;
 
-            case 2:
+            case "2":
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
                 System.out.println(library.searchStoreSongByArtist(artist));
                 break;
 
-            case 3:
+            case "3":
                 System.out.print("Enter album title: ");
                 String albumTitle = scanner.nextLine();
                 System.out.println(library.searchStoreAlbumByTitle(albumTitle));
                 break;
 
-            case 4:
+            case "4":
                 System.out.print("Enter artist: ");
                 String albumArtist = scanner.nextLine();
                 System.out.println(library.searchStoreAlbumByArtist(albumArtist));
@@ -117,37 +116,36 @@ public class View {
         System.out.println("3. Search for an album by title");
         System.out.println("4. Search for an album by artist");
         System.out.println("5. Search for a playlist by name");
-        System.out.print("Enter your choice: ");
+        System.out.print("Enter your choice with a number: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
+        String choice = scanner.nextLine();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
                 System.out.println(library.searchSongByTitle(songTitle));
                 break;
 
-            case 2:
+            case "2":
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
                 System.out.println(library.searchSongByArtist(artist));
                 break;
 
-            case 3:
+            case "3":
                 System.out.print("Enter album title: ");
                 String albumTitle = scanner.nextLine();
                 System.out.println(library.searchAlbumByTitle(albumTitle));
                 break;
 
-            case 4:
+            case "4":
                 System.out.print("Enter artist: ");
                 String albumArtist = scanner.nextLine();
                 System.out.println(library.searchAlbumByArtist(albumArtist));
                 break;
 
-            case 5:
+            case "5":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
                 System.out.println(library.searchPlayListByName(playlistName));
@@ -165,11 +163,10 @@ public class View {
         System.out.println("2. Add an album to the library");
         System.out.print("Enter your choice: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
+        String choice = scanner.nextLine();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
@@ -177,7 +174,7 @@ public class View {
                 System.out.println(library.addSong(songTitle, artist));
                 break;
 
-            case 2:
+            case "2":
                 System.out.print("Enter album title: ");
                 String albumTitleInput = scanner.nextLine();
                 System.out.print("Enter artist: ");
@@ -201,27 +198,26 @@ public class View {
         System.out.print("Enter your choice: ");
 
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
+        String choice = scanner.nextLine();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.println(library.getSongs());
                 break;
 
-            case 2:
+            case "2":
                 System.out.println(library.getArtists());
                 break;
 
-            case 3:
+            case "3":
                 System.out.println(library.getAlbums());
                 break;
 
-            case 4:
+            case "4":
                 System.out.println(library.getPlayLists());
                 break;
 
-            case 5:
+            case "5":
                 System.out.println(library.getFavorites());
                 break;
 
@@ -230,7 +226,7 @@ public class View {
         }
     }
 
-    // Manage Playlists
+    // Manage Playlists REMEBER TO UPDATE !!!!
     private static void managePlaylists(LibraryModel library, Scanner scanner) {
         System.out.println("\n===== Manage Playlists =====");
         System.out.println("1. Create a new playlist");
@@ -238,18 +234,17 @@ public class View {
         System.out.println("3. Remove a song from a playlist");
         System.out.print("Enter your choice: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character
+        String choice = scanner.nextLine();
 
         switch (choice) {
-            case 1:
+            case "1":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
                 // Implement playlist creation logic here
                 System.out.println("Playlist created: " + playlistName);
                 break;
 
-            case 2:
+            case "2":
                 System.out.print("Enter playlist name: ");
                 String addPlaylistName = scanner.nextLine();
                 System.out.print("Enter song title: ");
@@ -260,7 +255,7 @@ public class View {
                 System.out.println("Song added to playlist: " + addPlaylistName);
                 break;
 
-            case 3:
+            case "3":
                 System.out.print("Enter playlist name: ");
                 String removePlaylistName = scanner.nextLine();
                 System.out.print("Enter song title: ");
@@ -278,7 +273,6 @@ public class View {
 
     // Mark a Song as Favorite
     private static void markFavorite(LibraryModel library, Scanner scanner) {
-    	scanner.nextLine(); // get rid of the \n character before 
         System.out.print("Enter song title: ");
         String title = scanner.nextLine();
         System.out.print("Enter artist: ");
@@ -288,10 +282,8 @@ public class View {
 
     // Rate a Song
     private static void rateSong(LibraryModel library, Scanner scanner) {
-    	scanner.nextLine();
         System.out.println("Enter song title: ");
         String title = scanner.nextLine();
-        // call the scanner twice so it waits for user input
         System.out.println("Enter artist: ");
         String artist = scanner.nextLine();
         Integer rating = null;
@@ -308,8 +300,7 @@ public class View {
                 System.out.println("Invalid input. Please enter a number between 1 and 5.");
             }
         }
-        System.out.println();
-        
+        System.out.println(library.addRating(title, artist, rating));
     }
 	
 	public static void main(String[] args) throws FileNotFoundException {
