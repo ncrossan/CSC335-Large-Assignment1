@@ -17,7 +17,12 @@ class SongTest {
 		Song song = new Song("Hello", "Adele", "19");
 		assertEquals(song.getArtist(), "Adele");
 	}
-	
+
+	@Test
+	void testGetAlbum() {
+		Song song = new Song("Hello", "Adele", "19");
+		assertEquals(song.getAlbum(), "19");
+	}
 	@Test
 	void testToString() {
 		Song song = new Song("Hello", "Adele", "19");
