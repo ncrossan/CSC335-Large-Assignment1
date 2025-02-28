@@ -85,7 +85,7 @@ public class LibraryModel {
 		return title + " by "  + artist + " added to  " + playlistName;
 	}
 	
-	public String addSong(String title, String artist, String albumTitle) {
+	public String addSong(String title, String artist) {
 		if (musicStore.getSong(title, artist) != null) {
 			songs.add(musicStore.getSong(title, artist));			
 			return "added " + title + " by " + artist + " to library";
@@ -100,14 +100,12 @@ public class LibraryModel {
 			for (Song a : musicStore.getAlbum(title, artist).getSongs()) {
 				songs.add(a);
 			}
-			return "added" + title + " by " + artist + " to library";
+			return "added " + title + " by " + artist + " to library";
 		}
 		return "Album not found in Music Store!";
 	}
 	
 	public String addRating(String title, String artist, Integer rating) {
-		// checks if the rating is within bounds
-		if (rating < 1 || rating > 5) return "Set the rating between 1 and 5";
 		// checks if the song is in music store and if the song is in the library.
 		if (musicStore.getSong(title, artist) != null &&
 				songs.contains(musicStore.getSong(title, artist))) {
@@ -117,6 +115,7 @@ public class LibraryModel {
 			ratings.put(musicStore.getSong(title, artist), 5);
 			return title + " by " + artist + " was rated " + rating;
 		}
+		if (musicStore.getSong(title, artist) != null) return "Song was not found in library";
 		return "Song was not found in Music Store!";
 	}
 	
@@ -228,6 +227,6 @@ public class LibraryModel {
 	}
 	
 	public String searchStoreAlbumByTitle(String title) {
-		return musicStore.searchSongByArtist(title);
+		return musicStore.searchAlbumByTitle(title);
 	}
 }
