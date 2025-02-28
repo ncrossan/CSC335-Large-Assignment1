@@ -81,7 +81,13 @@ public class LibraryModel {
 		}
 		return "Song was not found in Music Store!";
 	}
-	
+	public String favorite(String title, String artist) {
+		if (musicStore.getSong(title, artist) != null) {
+			favorites.addSong(musicStore.getSong(title, artist));
+			return "added " + musicStore.getSong(title, artist).toString() + " to favorites";
+		}
+		return "Song was not found in the library!";
+	}
 	public String getSongs() {
 		String result = "Songs in library: ";
 		for (Song s : songs) {
