@@ -1,3 +1,7 @@
+/* Authors: Nathan Crossman, Andy Zhang
+ * Course: CSC 335
+ * Discription: the view of the music library
+ */
 package view;
 import model.LibraryModel;
 
@@ -10,7 +14,7 @@ public class View {
 	public static void promptUser() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		Scanner scanner = new Scanner(System.in);
-		
+		// loop until the user enters 8 to exit
         while (true) {
             System.out.println("\n===== Music Library System =====");
             System.out.println("1. Search in Music Store");
@@ -237,7 +241,7 @@ public class View {
         }
     }
 
-    // Manage Playlists REMEBER TO UPDATE !!!!
+    // Manage Playlists 
     private static void managePlaylists(LibraryModel library, Scanner scanner) {
         System.out.println("\n===== Manage Playlists =====");
         System.out.println("1. Create a new playlist");
