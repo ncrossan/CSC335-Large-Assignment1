@@ -240,7 +240,8 @@ public class View {
             case "1":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
-                // Implement playlist creation logic here
+                // create a new playlist with the name
+                library.addPlayList(playlistName);
                 System.out.println("Playlist created: " + playlistName);
                 break;
 
@@ -251,7 +252,7 @@ public class View {
                 String songTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
-                // Implement adding song to playlist logic here
+                library.addSongToPlayList(addPlaylistName, songTitle, artist);
                 System.out.println("Song added to playlist: " + addPlaylistName);
                 break;
 
@@ -263,6 +264,7 @@ public class View {
                 System.out.print("Enter artist: ");
                 String removeArtist = scanner.nextLine();
                 // Implement removing song from playlist logic here
+                library.removeSongFromPlayList(removePlaylistName, removeSongTitle, removeArtist);
                 System.out.println("Song removed from playlist: " + removePlaylistName);
                 break;
 
@@ -294,7 +296,7 @@ public class View {
                 rating = Integer.valueOf(scanner.nextLine());
                 if (rating < 1 || rating > 5) {
                     System.out.println("Rating must be between 1 and 5. Try again.");
-                    rating = null;  // Reset rating to force the loop to repeat
+                    rating = null;  // reset rating to force the loop to repeat
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number between 1 and 5.");
