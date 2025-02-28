@@ -34,14 +34,15 @@ class MusicStore {
 	private void parseFile(Scanner fileReader) {
 		String[] textHeader = fileReader.nextLine().split(",");
 		String artist = textHeader[1]; // get artist name
-		Album album = new Album(textHeader[0], textHeader[1],
+		String albumTitle = textHeader[0];
+		Album album = new Album(albumTitle, textHeader[1],
 								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
 		albumList.add(album);
 		
 		// add list of songs to album
 		while (fileReader.hasNextLine()) {
 			String songName = fileReader.nextLine(); // read song names from file
-			Song song = new Song(songName, artist); // create song object
+			Song song = new Song(songName, artist, albumTitle); // create song object
 			album.addSong(song);
 		}
 	}
@@ -59,7 +60,7 @@ class MusicStore {
 		String message = "";
 		// loop through every album in albumList to find the album(s) matching the title
 		for (Album a : albumList) {
-			if (a.getTitle().equals(title)) {
+			if (a.getTitle().toLowerCase().equals(title.toLowerCase())) {
 				return a.toString();
 			}
 		}
@@ -80,7 +81,7 @@ class MusicStore {
 		String message = "";
 		// loop through every album in albumList to find the album(s) from the artist
 		for (Album a : albumList) {
-			if (a.getArtist().equals(artist)) {
+			if (a.getArtist().toLowerCase().equals(artist.toLowerCase())) {
 				message += a.toString();
 			}
 		}
@@ -104,7 +105,7 @@ class MusicStore {
 		// to find songs matching the title of the argument
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (title.equals(s.getTitle())) {
+				if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
 					message += s.toString() +  " in " + a.getTitle() + "\n";
 				}
 			}
@@ -128,20 +129,20 @@ class MusicStore {
 		// to find songs matching the artist of the argument
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (artist.equals(s.getArtist())) {
+				if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
 					message += s.toString() + " in " + a.getTitle() + "\n";
 				}
 			}
 		}
 		// if no songs are found, set message to "Song not found!"
-		if (message.equals("")) message += "Song not found!";
+		if (message.toLowerCase().equals("")) message += "Song not found!";
 		return message;
 	}
 	
 	public Song getSong(String title, String artist) {
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (title.equals(s.getTitle()) && artist.equals(s.getArtist())) {
+				if (title.toLowerCase().equals(s.getTitle()) && artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
 					// escaping reference is not a problem because Song is immutable
 					return s;
 				}
@@ -152,7 +153,7 @@ class MusicStore {
 	
 	public Album getAlbum(String title, String artist) {
 		for (Album a : albumList) {
-			if (title.equals(a.getTitle()) && artist.equals(a.getArtist())) {
+			if (title.toLowerCase().equals(a.getTitle()) && artist.toLowerCase().equals(a.getArtist().toLowerCase())) {
 				// deeper copy is not needed because Song is immutable
 				return new Album(a);
 			}
