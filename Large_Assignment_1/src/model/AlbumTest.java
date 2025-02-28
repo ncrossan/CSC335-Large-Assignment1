@@ -10,7 +10,7 @@ class AlbumTest {
 	@Test
 	void testAddSong() {
 		Album album = new Album("19", "Adele", "Pop", 2015);
-		Song song = new Song("Song1", "Adele");
+		Song song = new Song("Song1", "Adele", "19");
 		album.addSong(song);
 		assertTrue(album.getSongs().contains(song));
 	}
@@ -18,7 +18,7 @@ class AlbumTest {
 	@Test
 	void testToString() {
 		Album album = new Album("19", "Adele", "Pop", 2015);
-		Song song = new Song("Song1", "Adele");
+		Song song = new Song("Song1", "Adele", "19");
 		album.addSong(song);
 		assertEquals("19, Adele, Pop, 2015\nSong1\n", album.toString());
 	}

@@ -173,7 +173,6 @@ class MusicStore {
 	 */
 	public Album getAlbum(String title, String artist) {
 		for (Album a : albumList) {
-
 			if (a.getTitle().toLowerCase().equals(title.toLowerCase()) &&
 				a.getArtist().toLowerCase().equals(artist.toLowerCase())) {
 				// deeper copy is not needed because Song is immutable

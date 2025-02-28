@@ -60,10 +60,9 @@ class Album {
 	public String toString() {
 		String result = title + ", " + artist + ", " + genre + ", " + year + "\n";
 		for (Song s: songList) {
-			result += s.getTitle() + ", ";
+			result += s.getTitle() + "\n";
 		}
-		result = result.substring(0, result.length()-2);
-		return result + "\n";
+		return result;
 	}
 	
 }

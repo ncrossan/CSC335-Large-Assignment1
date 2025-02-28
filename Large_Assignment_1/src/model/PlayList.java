@@ -31,14 +31,20 @@ class PlayList {
 		return name;
 	}
 	
+	public ArrayList<Song> getPlayList() {
+		return new ArrayList<Song>(songs);
+	}
+	
 	
 	@Override
 	public String toString() {
 		String result = name + "\n";
-		for (Song s : songs) {
-			result += s.toString() + ", ";
+		if (songs.size() == 0) {
+			return "There are no songs in your playlist!";
 		}
-		result = result.substring(0, result.length()-2);
-		return result + "\n";
+		for (Song s : songs) {
+			result += s.toString() + "\n";
+		}
+		return result;
 	}
 }
