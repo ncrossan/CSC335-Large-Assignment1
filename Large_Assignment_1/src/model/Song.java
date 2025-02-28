@@ -10,11 +10,13 @@ final class Song {
 	// instance variables
 	private final String title;
 	private final String artist;
+	private final String album;
 	
 	// constructor
-	public Song(String title, String artist) {
+	public Song(String title, String artist, String album) {
 		this.title = title;
 		this.artist = artist;
+		this.album = album;
 	}
 	
 	// Getters
@@ -24,6 +26,10 @@ final class Song {
 	
 	public String getArtist() {
 		return artist;
+	}
+	
+	public String getAlbum() {
+		return album;
 	}
 	
 	@Override

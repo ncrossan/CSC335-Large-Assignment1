@@ -11,8 +11,8 @@ import java.util.HashMap;
 public class LibraryModel {
 	// instance variables
 	private MusicStore musicStore;
-	private ArrayList<Song> songs;
 	private ArrayList<Album> albums;
+	private ArrayList<Song> songs;
 	private ArrayList<PlayList> playlists;
 	private PlayList favorites;
 	private HashMap<Song, Integer> ratings;
@@ -20,6 +20,8 @@ public class LibraryModel {
 	// constructor
 	public LibraryModel() throws FileNotFoundException {
 		musicStore = new MusicStore();
+		songs = new ArrayList<Song>();
+		albums = new ArrayList<Album>();
 		playlists = new ArrayList<PlayList>();
 		favorites = new PlayList("favorites");
 		ratings = new HashMap<Song, Integer>();
@@ -36,7 +38,7 @@ public class LibraryModel {
 		String result = "";
 		// add every playlist of the name to the result
 		for (PlayList p : playlists) {
-			if (p.getName().equals(name)) {
+			if (p.getName().toLowerCase().equals(name.toLowerCase())) {
 				result += p.toString();
 			}
 		}
@@ -45,9 +47,9 @@ public class LibraryModel {
 		return result;
 	}
 	
-	public String addSong(String title, String artist) {
+	public String addSong(String title, String artist, String albumTitle) {
 		if (musicStore.getSong(title, artist) != null) {
-			songs.add(musicStore.getSong(title, artist));
+			songs.add(musicStore.getSong(title, artist));			
 			return "added " + title + " by " + artist + " to library";
 		}
 		return "Song not found in Music Store!";
@@ -56,6 +58,10 @@ public class LibraryModel {
 	public String addAlbum(String title, String artist) {
 		if (musicStore.getAlbum(title, artist) != null){
 			albums.add(musicStore.getAlbum(title, artist));
+			// add the songs in the albums to the songs arraylist
+			for (Song a : musicStore.getAlbum(title, artist).getSongs()) {
+				songs.add(a);
+			}
 			return "added" + title + " by " + artist + " to library";
 		}
 		return "Album not found in Music Store!";
@@ -75,7 +81,13 @@ public class LibraryModel {
 		}
 		return "Song was not found in Music Store!";
 	}
-	
+	public String favorite(String title, String artist) {
+		if (musicStore.getSong(title, artist) != null) {
+			favorites.addSong(musicStore.getSong(title, artist));
+			return "added " + musicStore.getSong(title, artist).toString() + " to favorites";
+		}
+		return "Song was not found in the library!";
+	}
 	public String getSongs() {
 		String result = "Songs in library: ";
 		for (Song s : songs) {
@@ -116,36 +128,48 @@ public class LibraryModel {
 		return favorites.toString();
 	}
 	
-	/* This method validates if the song is in the library before using the method
-	 * inside of music store.
+	/* 
+	 *
 	 * 
 	 */
 	public String searchSongByTitle(String title) {
+		String result = "";
 		for (Song s : songs) {
-			if (title.equals(s.getTitle())) return musicStore.searchSongByTitle(title);
+			if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
+				result = s.toString() + " in " + s.getAlbum() + ", ";
+			}
 		}
-		return "Song not found in library";
+		if (result.equals("")) return title + " not found in library";
+		return result.substring(0, result.length()-2);
 		
 	}
 	public String searchSongByArtist(String artist) {
+		String result = "";
 		for (Song s : songs) {
-			if (artist.equals(s.getArtist())) return musicStore.searchSongByArtist(artist);
+			if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
+				result = s.toString() + " in " + s.getAlbum() + ", ";
+			}
 		}
-		return "Artist not found in library";
+		if (result.equals("")) return artist + " not found in library";
+		return result;
 	}
 	
 	public String searchAlbumByTitle(String title) {
+		String result = "";
 		for (Album a : albums) {
-			if (title.equals(a.getTitle())) return musicStore.searchAlbumByTitle(title);
+			if (title.toLowerCase().equals(a.getTitle().toLowerCase())) result += a.toString();
 		}
-		return "Album not found in library";
+		if (result.equals("")) return title + " not found in library";
+		return result; 
 	}
 	
 	public String searchAlbumByArtist(String artist) {
+		String result = "";
 		for (Album a : albums) {
-			if (artist.equals(a.getArtist())) return musicStore.searchAlbumByArtist(artist);
+			if (artist.toLowerCase().equals(a.getArtist().toLowerCase())) result += a.toString();
 		}
-		return "Artist not found in library";
+		if (result.equals("")) return artist + " not found in library";
+		return result;
 	}
 	
 }
