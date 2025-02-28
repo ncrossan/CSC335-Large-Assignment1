@@ -1,4 +1,4 @@
-/* Author: Nathan Crossman, Andy Zhang
+/* Authors: Nathan Crossman, Andy Zhang
  * Course: CSC 335
  * Description: An instance of this class represents a Music Store.
  */
@@ -27,8 +27,8 @@ class MusicStore {
 			fileReader.close();
 		}
 	}
-	/* This method parses each album text file and creates song and album
-	 * objects to put them in the music store
+	/* parses each album text file and creates song and album objects to put them in the music
+	 * store.
 	 */
 	private void parseFile(Scanner fileReader) {
 		String[] textHeader = fileReader.nextLine().split(",");
@@ -46,7 +46,7 @@ class MusicStore {
 		}
 	}
 	
-	/* This method searches the MusicStore for an Album given a String of
+	/* searches the MusicStore for an Album given a String of
 	 * the title of an album. Returns the Album's information and songs if
 	 * it is found, otherwise return a message indicating nothing was found.
 	 * Arguments:
@@ -67,7 +67,7 @@ class MusicStore {
 		if (message.equals("")) message += "Album not found!";
 		return message;
 	}
-	/* This method searches the MusicStore for an Album given a String of
+	/* searches the MusicStore for an Album given a String of
 	 * the name of an artist. Returns the Album's information and songs if
 	 * it is found, otherwise return a message indicating nothing was found.
 	 * Arguments:
@@ -89,7 +89,7 @@ class MusicStore {
 		return message;
 	}
 	
-	/* This method searches through every Song in the MusicStore for a song
+	/* searches through every Song in the MusicStore for a song
 	 * matching the name argument, any songs will be returned with their
 	 * title, artist, and the album they are in.
 	 * Arguments:
@@ -104,7 +104,7 @@ class MusicStore {
 		// to find songs matching the title of the argument
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (s.getTitle().toLowerCase().equals(title.toLowerCase())) {
+				if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
 					message += s.toString() +  " in " + a.getTitle() + "\n";
 				}
 			}
@@ -113,7 +113,7 @@ class MusicStore {
 		if (message.equals("")) message += "Song not found!";
 		return message;
 	}
-	/* This method searches through every Song in the MusicStore for a song
+	/* searches through every Song in the MusicStore for a song
 	 * matching the title argument, any songs will be returned with their
 	 * title, artist, and the album they are in.
 	 * Arguments:
@@ -128,7 +128,7 @@ class MusicStore {
 		// to find songs matching the artist of the argument
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (s.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+				if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
 					message += s.toString() + " in " + a.getTitle() + "\n";
 				}
 			}
@@ -137,21 +137,20 @@ class MusicStore {
 		if (message.toLowerCase().equals("")) message += "Song not found!";
 		return message;
 	}
-	
-	/* This method searches through every Song in the MusicStore for a song
-	 * matching the arguments, a song object is returned when found otherwise null
+	/* gets a song from the music store given a title and artist of a song
+	 * no access modifier so only LibraryModel can use this method
 	 * Arguments:
-	 * 		title:  a String of the song's name
-	 * 		artist: a String of the song's artist
+	 * 		title: title of a song
+	 * 		artist: name of an artist
 	 * Returns:
-	 * 		song: the instance of song in the albumList
-	 * 		null: if no song is found matching the arguments
+	 * 		s: a Song object
+	 * 		null if nothing was found
 	 */
-	public Song getSong(String title, String artist) {
+	Song getSong(String title, String artist) {
 		for (Album a : albumList) {
 			for (Song s : a.getSongs()) {
-				if (s.getTitle().toLowerCase().equals(title.toLowerCase()) &&
-					s.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+				if (title.toLowerCase().equals(s.getTitle().toLowerCase()) && 
+						artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
 					// escaping reference is not a problem because Song is immutable
 					return s;
 				}
@@ -159,21 +158,19 @@ class MusicStore {
 		}
 		return null;
 	}
-	
-	/* This method searches through every album in the instance variable
-	 * albumList, and returns the album object if the arguments match the object's
-	 * title and artist's values otherwise it returns null
+	/* gets an album from the music store given a title and artist of an album no
+	 * access modifier so only LibraryModel can use this method
 	 * Arguments:
-	 * 		title:  a String of the album's title
-	 * 		artist: a String of the album's artist
+	 * 		title: title of an album
+	 * 		artist: name of an artist
 	 * Returns:
-	 * 		Album: the album object stored in albumList
-	 * 		null:  if there is no album matching the arguments
+	 * 		Album(a): a copy of the album inside music store
+	 * 		null if nothing was found
 	 */
-	public Album getAlbum(String title, String artist) {
+	Album getAlbum(String title, String artist) {
 		for (Album a : albumList) {
-			if (a.getTitle().toLowerCase().equals(title.toLowerCase()) &&
-				a.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+			if (title.toLowerCase().equals(a.getTitle().toLowerCase()) && 
+					artist.toLowerCase().equals(a.getArtist().toLowerCase())) {
 				// deeper copy is not needed because Song is immutable
 				return new Album(a);
 			}
