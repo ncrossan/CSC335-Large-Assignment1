@@ -47,6 +47,44 @@ public class LibraryModel {
 		return result;
 	}
 	
+	public String removeSongFromPlayList(String playlistName, String title, String artist) {
+		boolean inPlayLists = false;
+		for (PlayList p : playlists) {
+			if (p.getName().toLowerCase().equals(playlistName.toLowerCase())) inPlayLists = true;
+		}
+		// if the playlist is not in playlists, return a message.
+		if (!inPlayLists) return "playlist does not exist";
+		
+		if (musicStore.getSong(title, artist) == null) return "Song does not exist";
+		if (songs.contains(musicStore.getSong(title, artist))) {
+			for (PlayList p : playlists) {
+				if (p.getName().toLowerCase().equals(playlistName.toLowerCase())) {
+					p.removeSong(musicStore.getSong(title, artist));;
+				}
+			}
+		}
+		return title + " by "  + artist + " removed from  " + playlistName;
+	}
+	
+	public String addSongToPlayList(String playlistName, String title, String artist) {
+		boolean inPlayLists = false;
+		for (PlayList p : playlists) {
+			if (p.getName().toLowerCase().equals(playlistName.toLowerCase())) inPlayLists = true;
+		}
+		// if the playlist is not in playlists, return a message.
+		if (!inPlayLists) return "playlist does not exist";
+		
+		if (musicStore.getSong(title, artist) == null) return "Song does not exist";
+		if (songs.contains(musicStore.getSong(title, artist))) {
+			for (PlayList p : playlists) {
+				if (p.getName().toLowerCase().equals(playlistName.toLowerCase())) {
+					p.addSong(musicStore.getSong(title, artist));;
+				}
+			}
+		}
+		return title + " by "  + artist + " added to  " + playlistName;
+	}
+	
 	public String addSong(String title, String artist, String albumTitle) {
 		if (musicStore.getSong(title, artist) != null) {
 			songs.add(musicStore.getSong(title, artist));			
@@ -81,19 +119,23 @@ public class LibraryModel {
 		}
 		return "Song was not found in Music Store!";
 	}
+	
 	public String favorite(String title, String artist) {
-		if (musicStore.getSong(title, artist) != null) {
+		// checks if the song is in the music store AND library
+		if (musicStore.getSong(title, artist) != null &&
+				songs.contains(musicStore.getSong(title, artist))) {
 			favorites.addSong(musicStore.getSong(title, artist));
 			return "added " + musicStore.getSong(title, artist).toString() + " to favorites";
 		}
 		return "Song was not found in the library!";
 	}
+	
 	public String getSongs() {
 		String result = "Songs in library: ";
 		for (Song s : songs) {
 			result += s.getTitle() + ", ";
 		}
-		if (result.equals("")) return "No songs in library yet!";
+		if (result.equals("Songs in library: ")) return "No songs in library yet!";
 		return result.substring(0, result.length()-2);
 	}
 	
@@ -102,7 +144,7 @@ public class LibraryModel {
 		for (Song s : songs) {
 			result += s.getArtist() + ", ";
 		}
-		if (result.equals("")) return "No songs in library yet!";
+		if (result.equals("Artists in library: ")) return "No songs in library yet!";
 		return result.substring(0, result.length()-2);
 	}
 	
@@ -172,4 +214,20 @@ public class LibraryModel {
 		return result;
 	}
 	
+	// call the methods of musicStore to search it
+	public String searchStoreSongByArtist(String artist) {
+		return musicStore.searchSongByArtist(artist);
+	}
+	
+	public String searchStoreSongByTitle(String title) {
+		return musicStore.searchSongByTitle(title);
+	}
+	
+	public String searchStoreAlbumByArtist(String artist) {
+		return musicStore.searchAlbumByArtist(artist);
+	}
+	
+	public String searchStoreAlbumByTitle(String title) {
+		return musicStore.searchSongByArtist(title);
+	}
 }
