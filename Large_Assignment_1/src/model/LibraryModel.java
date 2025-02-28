@@ -66,7 +66,8 @@ public class LibraryModel {
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) {
 				Song song = musicStore.getSong(title, artist);
-				if (song != null && songs.contains(song) && !(p.getPlayList().contains(song))) {
+				if (p.getPlayList().contains(song)) return "Song already added";
+				if (song != null && songs.contains(song)) {
 					p.addSong(song);
 					return "Song added!";
 				}
@@ -184,7 +185,7 @@ public class LibraryModel {
 		String result = "";
 		for (Song s : songs) {
 			if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
-				result = s.toString() + " in " + s.getAlbum() + ", ";
+				result += s.toString() + " in " + s.getAlbum() + ", ";
 			}
 		}
 		if (result.equals("")) return title + " not found in library";
@@ -195,7 +196,7 @@ public class LibraryModel {
 		String result = "";
 		for (Song s : songs) {
 			if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-				result = s.toString() + " in " + s.getAlbum() + ", ";
+				result += s.toString() + " in " + s.getAlbum() + "\n";
 			}
 		}
 		if (result.equals("")) return artist + " not found in library";

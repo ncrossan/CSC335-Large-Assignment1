@@ -253,8 +253,7 @@ public class View {
                 String songTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
-                library.addSongToPlayList(addPlaylistName, songTitle, artist);
-                System.out.println("Song added to playlist: " + addPlaylistName);
+                System.out.println(library.addSongToPlayList(addPlaylistName, songTitle, artist));
                 break;
 
             case "3":
