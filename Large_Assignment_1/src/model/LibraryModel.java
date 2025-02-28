@@ -20,6 +20,7 @@ public class LibraryModel {
 	// constructor
 	public LibraryModel() throws FileNotFoundException {
 		musicStore = new MusicStore();
+		songs = new ArrayList<Song>();
 		albums = new ArrayList<Album>();
 		playlists = new ArrayList<PlayList>();
 		favorites = new PlayList("favorites");
