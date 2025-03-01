@@ -198,7 +198,7 @@ public class View {
                 String artistInput = scanner.nextLine();
                 System.out.println(library.addAlbum(albumTitleInput, artistInput));
                 break;
-                
+
             // return to main menu
             case "3":
             	break;
@@ -269,8 +269,7 @@ public class View {
             case "1":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
-                library.addPlayList(playlistName);
-                System.out.println("Playlist created: " + playlistName);
+                System.out.println(library.addPlayList(playlistName));
                 break;
             // add song to playlist
             case "2":
@@ -280,8 +279,8 @@ public class View {
                 String songTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
-                library.addSongToPlayList(addPlaylistName, songTitle, artist);
-                System.out.println("Song added to playlist: " + addPlaylistName);
+                System.out.println(library.addSongToPlayList(addPlaylistName, 
+                		songTitle, artist));
                 break;
             // remove song from playlist
             case "3":
@@ -291,8 +290,8 @@ public class View {
                 String removeSongTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
                 String removeArtist = scanner.nextLine();
-                library.removeSongFromPlayList(removePlaylistName, removeSongTitle, removeArtist);
-                System.out.println("Song removed from playlist: " + removePlaylistName);
+                System.out.println(library.removeSongFromPlayList(removePlaylistName, 
+                		removeSongTitle, removeArtist));
                 break;
             // return to main menu
             case "4":
