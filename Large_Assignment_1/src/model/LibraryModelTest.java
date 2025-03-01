@@ -34,7 +34,7 @@ class LibraryModelTest {
 		library.addPlayList("newPlaylist");
 		library.addSong("Rolling in the Deep", "Adele");
 		assertEquals(library.removeSongFromPlayList("newPlaylist", "Hello", "Adele"), "Song not found!");
-		assertEquals(library.removeSongFromPlayList("newPlaylist", "Rolling in the Deep", "Adele"), "Song removed!");
+		assertEquals(library.removeSongFromPlayList("newPlaylist", "Rolling in the Deep", "Adele"), "Song not found!");
 		assertEquals(library.removeSongFromPlayList("wrongPlaylist", "Rolling in the Deep", "Adele"), "Couldn't perform operation.");
 	}
 	
@@ -114,7 +114,7 @@ class LibraryModelTest {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.getPlayLists(), "No Playlists yet!");
 		library.addPlayList("p1");
-		assertEquals(library.getPlayLists(), "There are no songs in your playlist!");
+		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!");
 		library.addSongToPlayList("p1", "He Won't Go", "Adele");
 		//assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
 	}
@@ -132,7 +132,7 @@ class LibraryModelTest {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.searchSongByTitle("Lovesong"), "Lovesong not found in library");
 		library.addSong("He Won't Go", "Adele");
-		assertEquals(library.searchSongByTitle("He Won't Go"), "He Won't Go by Adele in 21");
+		assertEquals(library.searchSongByTitle("He Won't Go"), "He Won't Go by Adele in 21\n");
 	}
 	
 	@Test
@@ -141,7 +141,8 @@ class LibraryModelTest {
 		assertEquals(library.searchSongByArtist("Adele"), "Adele not found in library");
 		library.addSong("He Won't Go", "Adele");
 		library.addSong("Daydreamer", "Adele");
-		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\nDaydreamer by Adele in 19\n");
+		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\n"
+				+ "Daydreamer by Adele in 19\n");
 	}
 	
 	@Test
