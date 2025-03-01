@@ -58,6 +58,7 @@ public class LibraryModel {
 	 * 
 	 */
 	public String addPlayList(String playlistName) {
+		if (playlistName.length() == 0) return "Invalid playlist name!";
 		// check if playlist name already exists
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) return "Playlist already exists";
@@ -84,6 +85,7 @@ public class LibraryModel {
 					p.addSong(song);
 					return "Song added!";
 				}
+				if (p.getPlayList().contains(song)) return "Song already in playlist!";
 				return "Song not found!";
 			}
 		}
@@ -103,7 +105,8 @@ public class LibraryModel {
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) {
 				Song song = musicStore.getSong(title, artist);
-				if (song != null && songs.contains(song)) {
+				if (song != null && songs.contains(song) && 
+						p.getPlayList().contains(song)) {
 					p.removeSong(song);
 					return "Song removed!";
 				}
@@ -166,7 +169,7 @@ public class LibraryModel {
 		// checks if the song is in music store and if the song is in the library.
 		if (song != null && songs.contains(song)) {
 			// automatically favorite the song if the rating is 5
-			if (rating == 5) favorites.addSong(song);
+			if (rating == 5) favorite(title, artist);
 			ratings.put(musicStore.getSong(title, artist), rating);
 			return song.toString() + " was rated " + rating;
 		}
@@ -215,7 +218,10 @@ public class LibraryModel {
 	public String getArtists() {
 		String result = "Artists in library:\n";
 		for (Album a : albums) {
-			result += a.getArtist() + "\n";
+			// account for duplicate artists in case of multiple albums from same artist
+			if (!result.contains(a.getArtist())) {
+				result += a.getArtist() + "\n";
+			}
 		}
 		if (result.equals("Artists in library:\n")) return "No artists in library yet!";
 		return result;
@@ -293,7 +299,7 @@ public class LibraryModel {
 		String result = "";
 		for (Song s : songs) {
 			if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-				result += s.toString() + " in " + s.getAlbum() + ", ";
+				result += s.toString() + " in " + s.getAlbum() + "\n";
 			}
 		}
 		if (result.equals("")) return artist + " not found in library";
