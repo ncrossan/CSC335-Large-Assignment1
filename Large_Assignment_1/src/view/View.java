@@ -1,6 +1,6 @@
-/* Authors: Nathan Crossman, Andy Zhang
+/* Authors: Nathan Crossan, Andy Zhang
  * Course: CSC 335
- * Discription: the view of the music library
+ * Description: the view of the music library
  */
 package view;
 import model.LibraryModel;
@@ -14,8 +14,9 @@ public class View {
 	public static void promptUser() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		Scanner scanner = new Scanner(System.in);
-		// loop until the user enters 8 to exit
+		// program main loop
         while (true) {
+        	// print main menu options
             System.out.println("\n===== Music Library System =====");
             System.out.println("1. Search in Music Store");
             System.out.println("2. Search in User Library");
@@ -29,6 +30,7 @@ public class View {
             
             String choice = scanner.nextLine();
             
+            // enter specific menus based on user input
             switch (choice) {
             case "1":
                 searchMusicStore(library, scanner);
@@ -62,7 +64,7 @@ public class View {
                 System.out.println("Exiting...");
                 scanner.close();
                 return;
-
+            
             default:
                 System.out.println("Invalid choice. Please try again.");
             }
@@ -167,6 +169,7 @@ public class View {
 
     // Add to Library
     private static void addToLibrary(LibraryModel library, Scanner scanner) {
+    	// print library menu options
         System.out.println("\n===== Add to Library =====");
         System.out.println("1. Add a song to the library");
         System.out.println("2. Add an album to the library");
@@ -175,8 +178,10 @@ public class View {
         System.out.print("Enter your choice: ");
 
         String choice = scanner.nextLine();
-
+        
+        // perform operations based on user input
         switch (choice) {
+        	// add song to library
             case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
@@ -184,7 +189,8 @@ public class View {
                 String artist = scanner.nextLine();
                 System.out.println(library.addSong(songTitle, artist));
                 break;
-
+            
+            // add album to library
             case "2":
                 System.out.print("Enter album title: ");
                 String albumTitleInput = scanner.nextLine();
@@ -192,6 +198,8 @@ public class View {
                 String artistInput = scanner.nextLine();
                 System.out.println(library.addAlbum(albumTitleInput, artistInput));
                 break;
+                
+            // return to main menu
             case "3":
             	break;
 
@@ -202,6 +210,7 @@ public class View {
 
     // Get Lists from Library
     private static void getListsFromLibrary(LibraryModel library, Scanner scanner) {
+    	// print listing menu options
         System.out.println("\n===== Library Lists =====");
         System.out.println("1. List of song titles");
         System.out.println("2. List of artists");
@@ -215,25 +224,27 @@ public class View {
         String choice = scanner.nextLine();
 
         switch (choice) {
+        	// list songs in library
             case "1":
                 System.out.println(library.getSongs());
                 break;
-
+            // list artists in library
             case "2":
                 System.out.println(library.getArtists());
                 break;
-
+            // list albums in library
             case "3":
                 System.out.println(library.getAlbums());
                 break;
-
+            // list playlists in library
             case "4":
                 System.out.println(library.getPlayLists());
                 break;
-
+            // list favorite songs in library
             case "5":
                 System.out.println(library.getFavorites());
                 break;
+            // return to main menu
             case "6":
             	break;
             default:
@@ -243,6 +254,7 @@ public class View {
 
     // Manage Playlists 
     private static void managePlaylists(LibraryModel library, Scanner scanner) {
+    	// print manage playlists options
         System.out.println("\n===== Manage Playlists =====");
         System.out.println("1. Create a new playlist");
         System.out.println("2. Add a song to a playlist");
@@ -253,13 +265,14 @@ public class View {
         String choice = scanner.nextLine();
 
         switch (choice) {
+        	// create new playlist
             case "1":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
                 library.addPlayList(playlistName);
                 System.out.println("Playlist created: " + playlistName);
                 break;
-
+            // add song to playlist
             case "2":
                 System.out.print("Enter playlist name: ");
                 String addPlaylistName = scanner.nextLine();
@@ -270,7 +283,7 @@ public class View {
                 library.addSongToPlayList(addPlaylistName, songTitle, artist);
                 System.out.println("Song added to playlist: " + addPlaylistName);
                 break;
-
+            // remove song from playlist
             case "3":
                 System.out.print("Enter playlist name: ");
                 String removePlaylistName = scanner.nextLine();
@@ -281,6 +294,7 @@ public class View {
                 library.removeSongFromPlayList(removePlaylistName, removeSongTitle, removeArtist);
                 System.out.println("Song removed from playlist: " + removePlaylistName);
                 break;
+            // return to main menu
             case "4":
             	break;
             default:
@@ -290,6 +304,7 @@ public class View {
 
     // Mark a Song as Favorite
     private static void markFavorite(LibraryModel library, Scanner scanner) {
+    	// print prompt to favorite song
         System.out.print("Enter song title: ");
         String title = scanner.nextLine();
         System.out.print("Enter artist: ");
@@ -299,12 +314,13 @@ public class View {
 
     // Rate a Song
     private static void rateSong(LibraryModel library, Scanner scanner) {
+    	// print prompt to rate a song
         System.out.println("Enter song title: ");
         String title = scanner.nextLine();
         System.out.println("Enter artist: ");
         String artist = scanner.nextLine();
         Integer rating = null;
-        // error checking
+        // validate user input
         while (rating == null) {
             System.out.println("Enter rating (1-5): ");
             try {
