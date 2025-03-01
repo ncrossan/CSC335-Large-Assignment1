@@ -40,7 +40,7 @@ class PlayList {
 	public String toString() {
 		String result = name + "\n";
 		if (songs.size() == 0) {
-			return result + "There are no songs in your playlist!";
+			return result + "There are no songs in your playlist!\n";
 		}
 		for (Song s : songs) {
 			result += s.toString() + "\n";
