@@ -46,7 +46,7 @@ class PlayListTest {
 	void testToString() throws FileNotFoundException {
 		MusicStore musicStore = new MusicStore();
 		PlayList playlist = new PlayList("test");
-		assertEquals(playlist.toString(), "test\nThere are no songs in your playlist!");
+		assertEquals(playlist.toString(), "test\nThere are no songs in your playlist!\n");
 		playlist.addSong(musicStore.getSong("My Heart Is Full", "Norah Jones"));
 		assertEquals(playlist.toString(), "test\nMy Heart Is Full by Norah Jones\n");
 	}
