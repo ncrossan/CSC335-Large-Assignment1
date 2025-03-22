@@ -1,4 +1,4 @@
-/* Author: Nathan Crossman, Andy Zhang
+/* Authors: Nathan Crossman, Andy Zhang
  * Course: CSC 335
  * Description: An instance of this class represents a Song.
  * NOTE: THIS CLASS IS IMMUTABLE
