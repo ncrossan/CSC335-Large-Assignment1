@@ -114,6 +114,10 @@ class LibraryModelTest {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.getPlayLists(), "No Playlists yet!");
 		library.addPlayList("p1");
+		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!\n");
+		library.addSong("He Won't Go", "Adele");
+		library.addSongToPlayList("p1", "He Won't Go", "Adele");
+		assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
 		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!");
 		library.addSongToPlayList("p1", "He Won't Go", "Adele");
 		//assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
@@ -141,6 +145,7 @@ class LibraryModelTest {
 		assertEquals(library.searchSongByArtist("Adele"), "Adele not found in library");
 		library.addSong("He Won't Go", "Adele");
 		library.addSong("Daydreamer", "Adele");
+		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\nDaydreamer by Adele in 19\n");
 		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\n"
 				+ "Daydreamer by Adele in 19\n");
 	}
@@ -184,5 +189,42 @@ class LibraryModelTest {
 															+ "Someone Like You\n"
 															+ "I Found a Boy\n");
 	}
-
+	
+	@Test
+	void testPlaySong() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		assertEquals(library.playSong("He won't go", "Adele"), "Playing He Won't Go by Adele");
+		assertEquals(library.playSong("asd", ""), "asd by  not found in library.");
+	}
+	
+	@Test
+	void testGetRecentlyPlayed() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		assertEquals(library.getRecentlyPlayed(), "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Someone Like You", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Lovesong", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Set Fire to the Rain", "Adele");
+		assertEquals(library.getRecentlyPlayed(), "Set Fire to the Rain by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n");
+	}
 }

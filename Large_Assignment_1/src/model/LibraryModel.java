@@ -7,6 +7,8 @@ package model;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class LibraryModel {
 	// instance variables
@@ -16,6 +18,8 @@ public class LibraryModel {
 	private ArrayList<PlayList> playlists;
 	private PlayList favorites;
 	private HashMap<Song, Integer> ratings;
+	private ArrayList<Song> recentlyPlayed;
+	private HashMap<Song, Integer> plays;
 	
 	// constructor
 	public LibraryModel() throws FileNotFoundException {
@@ -25,6 +29,8 @@ public class LibraryModel {
 		playlists = new ArrayList<PlayList>();
 		favorites = new PlayList("favorites");
 		ratings = new HashMap<Song, Integer>();
+		recentlyPlayed = new ArrayList<>();
+		plays = new HashMap<Song, Integer>();
 	}
 	
 	/* Searches through the playlist ArrayList for playlists that match
@@ -131,8 +137,77 @@ public class LibraryModel {
 			songs.add(musicStore.getSong(title, artist));			
 			return "added " + song.toString() + " to library";
 		}
+		PlayList playlist = new PlayList(playlistName);
+		playlists.add(playlist);
+		return "Playlist successfully created!";
+	}
+	/* adds a song to a given playlist with the playlistName name. Takes in a song
+	 * using an artist and the title of the song.
+	 * Arguments:
+	 * 		playlistName: a String containing the name of a playlist to add to
+	 * 		title: the name of the song to be added
+	 * 		artist: the artist of the song to be added
+	 * Returns:
+	 * 		a String message determining if a song was added or not or if the operation
+	 * 		failed.
+	 */		
+	public String addSongToPlayList(String playlistName, String title, String artist) {
+		for (PlayList p : playlists) {
+			if (p.getName().equals(playlistName)) {
+				Song song = musicStore.getSong(title, artist);
+				if (song != null && songs.contains(song) && !(p.getPlayList().contains(song))) {
+					p.addSong(song);
+					return "Song added!";
+				}
+				if (p.getPlayList().contains(song)) return "Song already in playlist!";
+				return "Song not found!";
+			}
+		}
+		return "Couldn't perform operation.";
+	}
+	/* removes a song from a given playlist with the playlistName name. Takes in a song
+	 * using an artist and the title of the song.
+	 * Arguments:
+	 * 		playlistName: the name of a playlist to remove from
+	 * 		title: the name of the song to be removed
+	 * 		artist: the artist of the song to be removed
+	 * Returns:
+	 * 	 	a String message determining if a song was added or not or if the operation
+	 * 		failed.
+	 */
+	public String removeSongFromPlayList(String playlistName, String title, String artist) {
+		for (PlayList p : playlists) {
+			if (p.getName().equals(playlistName)) {
+				Song song = musicStore.getSong(title, artist);
+				if (song != null && songs.contains(song) && 
+						p.getPlayList().contains(song)) {
+					p.removeSong(song);
+					return "Song removed!";
+				}
+				return "Song not found!";
+			}
+		}
+		return "Couldn't perform operation.";
+	}
+
+	/* adds a song to the library given the song title and the artist of the song
+	 * Arguments:
+	 * 		title: the name of the song to be added
+	 * 		artist: the artist of the song to be added
+	 * Returns:
+	 * 		a String message determining if a song was successfully added or
+	 * 		not
+	 */
+	public String addSong(String title, String artist) {
+		Song song = musicStore.getSong(title, artist);
+		if (songs.contains(song)) return "Song is already in library";
+		if (song != null) {
+			songs.add(musicStore.getSong(title, artist));
+			return "added " + song.toString() + " to library";
+		}
 		return "Song not found in Music Store!";
 	}
+
 	/* adds an album to the library given the album title and the artist
 	 * of the album
 	 * Arguments:
@@ -340,6 +415,34 @@ public class LibraryModel {
 		return result;
 	}
 	
+	public String playSong(String title, String artist) {
+		String result = "";
+		Song song = musicStore.getSong(title, artist);
+		if (song != null && songs.contains(song)) {
+			// adds the song to the recentlyPlayed list
+			recentlyPlayed.add(song);
+			// remove the oldest song from the recentlyPlayed ArrayList if it becomes larger than 10
+			if (recentlyPlayed.size() > 10) recentlyPlayed.remove(0);
+			
+			// adds the song into the plays HashMap if it doesn't already exist
+			if (!plays.containsKey(song)) plays.put(song, 0);
+			// increments the play count of the song
+			plays.put(song, plays.get(song) + 1);
+			
+			result += "Playing " + song.toString();
+		}
+		if (result.length() < 1) result += title + " by " + artist + " not found in library.";
+		return result;
+	}
+	
+	public String getRecentlyPlayed() {
+		String result = "";
+		// add the recentlyPlayed ArrayList backwards to result
+		for (int i=0; i < recentlyPlayed.size(); i++) {
+			result += recentlyPlayed.get(recentlyPlayed.size()-1-i).toString() + "\n";
+		}
+		return result;
+	}
 	
 	// call the methods of musicStore to search it
 	public String searchStoreSongByArtist(String artist) {
