@@ -10,8 +10,14 @@ class MusicStoreTest {
 	@Test
 	void testSearchAlbumByTitle() throws FileNotFoundException {
 		MusicStore musicStore = new MusicStore();
-		assertEquals(musicStore.searchAlbumByTitle("Begin Again"), "Begin Again, Norah Jones, Pop, 2018\n" +
-		"My Heart Is Full, Begin Again, It Was You, A Song with No Name, Uh Oh, Wintertime, Just a Little Bit\n");
+		assertEquals(musicStore.searchAlbumByTitle("Begin Again"), "Begin Again, Norah Jones, Pop, 2018\n"
+				+ "My Heart Is Full\n"
+				+ "Begin Again\n"
+				+ "It Was You\n"
+				+ "A Song with No Name\n"
+				+ "Uh Oh\n"
+				+ "Wintertime\n"
+				+ "Just a Little Bit\n");
 		assertEquals(musicStore.searchAlbumByTitle("none"), "Album not found!");
 		assertNotEquals(musicStore.searchAlbumByTitle("Begin Again"), "Album not found");
 	}
@@ -20,11 +26,31 @@ class MusicStoreTest {
 	void testSearchAlbumByArtist() throws FileNotFoundException {
 		MusicStore musicStore = new MusicStore();
 		assertEquals(musicStore.searchAlbumByArtist("Adele"), "19, Adele, Pop, 2008\n"
-				+ "Daydreamer, Best for Last, Chasing Pavements, Cold Shoulder, Crazy for You, Melt My Heart to Stone, "
-				+ "First Love, Right as Rain, Make You Feel My Love, My Same, Tired, Hometown Glory\n"
+				+ "Daydreamer\n"
+				+ "Best for Last\n"
+				+ "Chasing Pavements\n"
+				+ "Cold Shoulder\n"
+				+ "Crazy for You\n"
+				+ "Melt My Heart to Stone\n"
+				+ "First Love\n"
+				+ "Right as Rain\n"
+				+ "Make You Feel My Love\n"
+				+ "My Same\n"
+				+ "Tired\n"
+				+ "Hometown Glory\n"
 				+ "21, Adele, Pop, 2011\n"
-				+ "Rolling in the Deep, Rumour Has It, Turning Tables, Don't You Remember, Set Fire to the Rain, "
-				+ "He Won't Go, Take It All, I'll Be Waiting, One and Only, Lovesong, Someone Like You, I Found a Boy\n");
+				+ "Rolling in the Deep\n"
+				+ "Rumour Has It\n"
+				+ "Turning Tables\n"
+				+ "Don't You Remember\n"
+				+ "Set Fire to the Rain\n"
+				+ "He Won't Go\n"
+				+ "Take It All\n"
+				+ "I'll Be Waiting\n"
+				+ "One and Only\n"
+				+ "Lovesong\n"
+				+ "Someone Like You\n"
+				+ "I Found a Boy\n");
 		assertEquals(musicStore.searchAlbumByArtist("none"), "Album not found!");
 	}
 	
@@ -47,5 +73,21 @@ class MusicStoreTest {
 				+ "Just a Little Bit by Norah Jones in Begin Again\n"
 				+ "");
 		assertEquals(musicStore.searchSongByArtist("none"), "Song not found!");
+	}
+	@Test
+	void testGetSong() throws FileNotFoundException {
+		MusicStore musicStore = new MusicStore();
+		Song song = musicStore.getSong("After Party", "Ozomatli");
+		assertEquals(song.toString(), "After Party by Ozomatli");
+		Song song2 = musicStore.getSong("AfterParty", "r");
+		assertTrue(song2 == null);
+	}
+	@Test
+	void testGetAlbum() throws FileNotFoundException {
+		MusicStore musicStore = new MusicStore();
+		Album album = musicStore.getAlbum("19", "adele");
+		assertTrue(album != null);
+		Album album2 = musicStore.getAlbum("3", "adele");
+		assertTrue(album2 == null);
 	}
 }
