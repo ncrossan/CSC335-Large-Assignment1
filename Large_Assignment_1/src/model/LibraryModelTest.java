@@ -224,7 +224,8 @@ class LibraryModelTest {
 	}
 	
 	@Test
-	void getMostPlayedSongs() throws FileNotFoundException {
+	// write this test case last as the order shifts when changing code
+	void testGetMostPlayedSongs() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
 		library.addAlbum("21", "Adele");
 		library.playSong("Rolling in the Deep", "Adele");
@@ -242,9 +243,9 @@ class LibraryModelTest {
 		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
 				+ "Turning Tables by Adele: 2 plays\n"
 				+ "Don't You Remember by Adele: 2 plays\n"
-				+ "Someone Like You by Adele: 1 plays\n"
 				+ "Lovesong by Adele: 1 plays\n"
-				+ "Set Fire to the Rain by Adele: 1 plays\n");
+				+ "Set Fire to the Rain by Adele: 1 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n");
 		library.addAlbum("19", "Adele");
 		library.playSong("Daydreamer", "Adele");
 		library.playSong("Best for Last", "Adele");
@@ -253,14 +254,92 @@ class LibraryModelTest {
 		library.playSong("Melt My Heart to Stone", "Adele");
 		library.playSong("Melt My Heart to Stone", "Adele");
 		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
-				+ "Melt My Heart to Stone by Adele: 2 plays\n"
 				+ "Turning Tables by Adele: 2 plays\n"
+				+ "Melt My Heart to Stone by Adele: 2 plays\n"
 				+ "Don't You Remember by Adele: 2 plays\n"
-				+ "Daydreamer by Adele: 1 plays\n"
-				+ "Someone Like You by Adele: 1 plays\n"
-				+ "Chasing Pavements by Adele: 1 plays\n"
-				+ "Best for Last by Adele: 1 plays\n"
 				+ "Lovesong by Adele: 1 plays\n"
-				+ "Crazy for You by Adele: 1 plays\n");
+				+ "Set Fire to the Rain by Adele: 1 plays\n"
+				+ "Best for Last by Adele: 1 plays\n"
+				+ "Chasing Pavements by Adele: 1 plays\n"
+				+ "Crazy for You by Adele: 1 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n");
 	}
+	
+	@Test
+	void testGetSortedSongsByTitle() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addAlbum("19", "Adele");
+		assertEquals(library.getSortedSongsByTitle(), "Best for Last by Adele\n"
+				+ "Chasing Pavements by Adele\n"
+				+ "Cold Shoulder by Adele\n"
+				+ "Crazy for You by Adele\n"
+				+ "Daydreamer by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "First Love by Adele\n"
+				+ "He Won't Go by Adele\n"
+				+ "Hometown Glory by Adele\n"
+				+ "I Found a Boy by Adele\n"
+				+ "I'll Be Waiting by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Make You Feel My Love by Adele\n"
+				+ "Melt My Heart to Stone by Adele\n"
+				+ "My Same by Adele\n"
+				+ "One and Only by Adele\n"
+				+ "Right as Rain by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rumour Has It by Adele\n"
+				+ "Set Fire to the Rain by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "Take It All by Adele\n"
+				+ "Tired by Adele\n"
+				+ "Turning Tables by Adele\n");
+	}
+	
+	@Test
+	void testGetSortedSongsByArtist() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addAlbum("Old Ideas", "Leonard Cohen");
+		assertEquals(library.getSortedSongsByArtist(), "Rolling in the Deep by Adele\n"
+				+ "Rumour Has It by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Set Fire to the Rain by Adele\n"
+				+ "He Won't Go by Adele\n"
+				+ "Take It All by Adele\n"
+				+ "I'll Be Waiting by Adele\n"
+				+ "One and Only by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "I Found a Boy by Adele\n"
+				+ "Going Home by Leonard Cohen\n"
+				+ "Amen by Leonard Cohen\n"
+				+ "Show Me the Place by Leonard Cohen\n"
+				+ "Darkness by Leonard Cohen\n"
+				+ "Anyhow by Leonard Cohen\n"
+				+ "Crazy to Love You by Leonard Cohen\n"
+				+ "Come Healing by Leonard Cohen\n"
+				+ "Banjo by Leonard Cohen\n"
+				+ "Lullaby by Leonard Cohen\n"
+				+ "Different Sides by Leonard Cohen\n");
+	}
+	
+	@Test
+	// order changes if two songs have the same rating so write this testcase last
+	void testGetSortedRatings() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addRating("Take It All", "Adele", 5);
+		library.addRating("Someone Like You", "Adele", 3);
+		library.addRating("Don't You Remember", "Adele", 1);
+		library.addRating("Rolling in the Deep", "Adele", 2);
+		library.addRating("One and Only", "Adele", 5);
+		assertEquals(library.getSortedRatings(), "Don't You Remember by Adele: 1\n"
+				+ "Rolling in the Deep by Adele: 2\n"
+				+ "Someone Like You by Adele: 3\n"
+				+ "Take It All by Adele: 5\n"
+				+ "One and Only by Adele: 5\n");
+	}
+
 }
