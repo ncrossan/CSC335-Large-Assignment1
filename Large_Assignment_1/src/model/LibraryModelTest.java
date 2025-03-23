@@ -118,9 +118,6 @@ class LibraryModelTest {
 		library.addSong("He Won't Go", "Adele");
 		library.addSongToPlayList("p1", "He Won't Go", "Adele");
 		assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
-		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!");
-		library.addSongToPlayList("p1", "He Won't Go", "Adele");
-		//assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
 	}
 	
 	@Test
@@ -146,8 +143,6 @@ class LibraryModelTest {
 		library.addSong("He Won't Go", "Adele");
 		library.addSong("Daydreamer", "Adele");
 		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\nDaydreamer by Adele in 19\n");
-		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\n"
-				+ "Daydreamer by Adele in 19\n");
 	}
 	
 	@Test
@@ -226,5 +221,46 @@ class LibraryModelTest {
 				+ "Turning Tables by Adele\n"
 				+ "Rolling in the Deep by Adele\n"
 				+ "Rolling in the Deep by Adele\n");
+	}
+	
+	@Test
+	void getMostPlayedSongs() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 3 plays\n");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Someone Like You", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Lovesong", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Set Fire to the Rain", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
+				+ "Turning Tables by Adele: 2 plays\n"
+				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n"
+				+ "Lovesong by Adele: 1 plays\n"
+				+ "Set Fire to the Rain by Adele: 1 plays\n");
+		library.addAlbum("19", "Adele");
+		library.playSong("Daydreamer", "Adele");
+		library.playSong("Best for Last", "Adele");
+		library.playSong("Chasing Pavements", "Adele");
+		library.playSong("Crazy for You", "Adele");
+		library.playSong("Melt My Heart to Stone", "Adele");
+		library.playSong("Melt My Heart to Stone", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
+				+ "Melt My Heart to Stone by Adele: 2 plays\n"
+				+ "Turning Tables by Adele: 2 plays\n"
+				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Daydreamer by Adele: 1 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n"
+				+ "Chasing Pavements by Adele: 1 plays\n"
+				+ "Best for Last by Adele: 1 plays\n"
+				+ "Lovesong by Adele: 1 plays\n"
+				+ "Crazy for You by Adele: 1 plays\n");
 	}
 }
