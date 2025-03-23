@@ -134,11 +134,80 @@ public class LibraryModel {
 		Song song = musicStore.getSong(title, artist);
 		if (songs.contains(song)) return "Song is already in library";
 		if (song != null) {
+			songs.add(musicStore.getSong(title, artist));			
+			return "added " + song.toString() + " to library";
+		}
+		PlayList playlist = new PlayList(playlistName);
+		playlists.add(playlist);
+		return "Playlist successfully created!";
+	}
+	/* adds a song to a given playlist with the playlistName name. Takes in a song
+	 * using an artist and the title of the song.
+	 * Arguments:
+	 * 		playlistName: a String containing the name of a playlist to add to
+	 * 		title: the name of the song to be added
+	 * 		artist: the artist of the song to be added
+	 * Returns:
+	 * 		a String message determining if a song was added or not or if the operation
+	 * 		failed.
+	 */		
+	public String addSongToPlayList(String playlistName, String title, String artist) {
+		for (PlayList p : playlists) {
+			if (p.getName().equals(playlistName)) {
+				Song song = musicStore.getSong(title, artist);
+				if (song != null && songs.contains(song) && !(p.getPlayList().contains(song))) {
+					p.addSong(song);
+					return "Song added!";
+				}
+				if (p.getPlayList().contains(song)) return "Song already in playlist!";
+				return "Song not found!";
+			}
+		}
+		return "Couldn't perform operation.";
+	}
+	/* removes a song from a given playlist with the playlistName name. Takes in a song
+	 * using an artist and the title of the song.
+	 * Arguments:
+	 * 		playlistName: the name of a playlist to remove from
+	 * 		title: the name of the song to be removed
+	 * 		artist: the artist of the song to be removed
+	 * Returns:
+	 * 	 	a String message determining if a song was added or not or if the operation
+	 * 		failed.
+	 */
+	public String removeSongFromPlayList(String playlistName, String title, String artist) {
+		for (PlayList p : playlists) {
+			if (p.getName().equals(playlistName)) {
+				Song song = musicStore.getSong(title, artist);
+				if (song != null && songs.contains(song) && 
+						p.getPlayList().contains(song)) {
+					p.removeSong(song);
+					return "Song removed!";
+				}
+				return "Song not found!";
+			}
+		}
+		return "Couldn't perform operation.";
+	}
+
+	/* adds a song to the library given the song title and the artist of the song
+	 * Arguments:
+	 * 		title: the name of the song to be added
+	 * 		artist: the artist of the song to be added
+	 * Returns:
+	 * 		a String message determining if a song was successfully added or
+	 * 		not
+	 */
+	public String addSong(String title, String artist) {
+		Song song = musicStore.getSong(title, artist);
+		if (songs.contains(song)) return "Song is already in library";
+		if (song != null) {
 			songs.add(musicStore.getSong(title, artist));
 			return "added " + song.toString() + " to library";
 		}
 		return "Song not found in Music Store!";
 	}
+
 	/* adds an album to the library given the album title and the artist
 	 * of the album
 	 * Arguments:

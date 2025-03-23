@@ -1,4 +1,4 @@
-/* Author: Nathan Crossman, Andy Zhang
+/* Authors: Nathan Crossman, Andy Zhang
  * Course: CSC 335
  * Description: An instance of this class represents a PlayList.
  */
@@ -30,15 +30,21 @@ class PlayList {
 	public String getName() {
 		return name;
 	}
+	// returns a copy of the songs ArrayList
+	public ArrayList<Song> getPlayList() {
+		return new ArrayList<Song>(songs);
+	}
 	
 	
 	@Override
 	public String toString() {
 		String result = name + "\n";
-		for (Song s : songs) {
-			result += s.toString() + ", ";
+		if (songs.size() == 0) {
+			return result + "There are no songs in your playlist!\n";
 		}
-		result = result.substring(0, result.length()-2);
-		return result + "\n";
+		for (Song s : songs) {
+			result += s.toString() + "\n";
+		}
+		return result;
 	}
 }
