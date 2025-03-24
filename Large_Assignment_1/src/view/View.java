@@ -313,11 +313,12 @@ public class View {
     	// print listing menu options
         System.out.println("\n===== Library Lists =====");
         System.out.println("1. List of song titles");
-        System.out.println("2. List of artists");
-        System.out.println("3. List of albums");
-        System.out.println("4. List of playlists");
-        System.out.println("5. List of favorite songs");
-        System.out.println("6. Back");
+        System.out.println("2. Shuffle song titles");
+        System.out.println("3. List of artists");
+        System.out.println("4. List of albums");
+        System.out.println("5. List of playlists");
+        System.out.println("6. List of favorite songs");
+        System.out.println("7. Back");
 
         System.out.print("Enter your choice: ");
 
@@ -330,22 +331,25 @@ public class View {
                 break;
             // list artists in library
             case "2":
+                System.out.println(library.shuffleSongs());
+                break;
+            case "3":
                 System.out.println(library.getArtists());
                 break;
             // list albums in library
-            case "3":
+            case "4":
                 System.out.println(library.getAlbums());
                 break;
             // list playlists in library
-            case "4":
+            case "5":
                 System.out.println(library.getPlayLists());
                 break;
             // list favorite songs in library
-            case "5":
+            case "6":
                 System.out.println(library.getFavorites());
                 break;
             // return to main menu
-            case "6":
+            case "7":
             	break;
             default:
                 System.out.println("Invalid choice.");
@@ -359,7 +363,8 @@ public class View {
         System.out.println("1. Create a new playlist");
         System.out.println("2. Add a song to a playlist");
         System.out.println("3. Remove a song from a playlist");
-        System.out.println("4. Back");
+        System.out.println("4. Shuffle a playlist");
+        System.out.println("5. Back");
         System.out.print("Enter your choice: ");
 
         String choice = scanner.nextLine();
@@ -397,6 +402,11 @@ public class View {
                 break;
             // return to main menu
             case "4":
+            	System.out.print("Enter playlist name: ");
+                String playlist = scanner.nextLine();
+                System.out.println(library.shufflePlaylist(playlist));
+            	break;
+            case "5":
             	break;
             default:
                 System.out.println("Invalid choice.");

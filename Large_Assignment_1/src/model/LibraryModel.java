@@ -303,7 +303,7 @@ public class LibraryModel {
 		String output = "Songs shuffled!\n";
 		Collections.shuffle(songs);
 		for (Song s : songs) {
-			output += s.toString();
+			output += s.toString() + "\n";
 		}
 		return output;
 	}
