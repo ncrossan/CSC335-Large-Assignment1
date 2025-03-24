@@ -142,9 +142,13 @@ public class LibraryModel {
 	 */
 	public String addSong(String title, String artist) {
 		Song song = musicStore.getSong(title, artist);
+		Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+		// add album to library if song is added
+		if (!(albums.contains(album))) albums.add(album);
+		
 		if (songs.contains(song)) return "Song is already in library";
 		if (song != null) {
-			songs.add(musicStore.getSong(title, artist));
+			songs.add(song);
 			maintainGenrePlayLists(song, 1);
 			
 			return "added " + song.toString() + " to library";
