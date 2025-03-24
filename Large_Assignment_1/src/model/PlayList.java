@@ -23,6 +23,12 @@ class PlayList {
 		this.songs = playlist.getPlayList();
 	}
 	
+	// copy constructor
+	public PlayList(String name, ArrayList<Song> songList) {
+		this.name = name;
+		this.songs = songList;
+	}
+	
 	// adds a song to the songs ArrayList
 	public void addSong(Song song) {
 		songs.add(song);

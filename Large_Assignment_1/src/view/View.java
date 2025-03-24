@@ -154,13 +154,19 @@ public class View {
             case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
-                System.out.println(library.searchSongByTitle(songTitle));
+                String output1 = library.searchSongByTitle(songTitle);
+                System.out.println(output1);
+                if (output1.contains("not found")) break;
+                getAlbumInformation(library, scanner, "song", songTitle);
                 break;
 
             case "2":
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
-                System.out.println(library.searchSongByArtist(artist));
+                String output2 = library.searchSongByArtist(artist);
+                System.out.println(output2);
+                if (output2.contains("not found")) break;
+                getAlbumInformation(library, scanner, "artist", artist);
                 break;
 
             case "3":
@@ -186,6 +192,33 @@ public class View {
             default:
                 System.out.println("Invalid choice.");
         }
+    }
+    
+    // Get album information from song search
+    private static void getAlbumInformation(LibraryModel library, Scanner scanner, String query, String userSearch) {
+    	System.out.println("\n===== Album Information =====");
+    	System.out.println("1. Get additional album information");
+    	System.out.println("2. Back");
+    	
+    	System.out.println("Enter your choice: ");
+    	
+    	String choice = scanner.nextLine();
+    	
+    	// perform operations based on user input
+    	switch (choice) {
+    		// get album information
+    		case "1":
+    			if (query.equals("song")) System.out.println(library.getAlbumInformationBySong(userSearch));
+    			else System.out.println(library.getAlbumInformationByArtist(userSearch));
+    			break;
+    		
+    		// return to main menu
+    		case "2":
+    			break;
+    		
+    		default:
+    			System.out.println("Invalid choice.");
+    	}
     }
 
     // Add to Library

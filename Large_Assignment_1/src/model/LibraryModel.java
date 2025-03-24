@@ -6,6 +6,8 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -273,6 +275,86 @@ public class LibraryModel {
 	 */
 	public String getFavorites() {
 		return favorites.toString();
+	}
+	
+	// remove song from library
+	public String removeSong(String title, String artist) {
+		Song song = musicStore.getSong(title, artist);
+		if (!(songs.contains(song)) || song.equals(null)) {
+			return "Song not found in library.";
+		}
+		songs.remove(song);
+		return song.toString() + " removed.";
+	}
+	
+	// remove song from album in library
+	public String removeAlbum(String title, String artist) {
+		Album album = musicStore.getAlbum(title, artist);
+		if (!(albums.contains(album)) || album.equals(null)) {
+			return "Album not found in library.";
+		}
+		albums.remove(album);
+		return title + " by " + artist + " removed.";
+	}
+	
+	// shuffle songs ArrayList
+	public String shuffleSongs() {
+		if (songs.size() == 0) return "There are no songs in your library.";
+		String output = "Songs shuffled!\n";
+		Collections.shuffle(songs);
+		for (Song s : songs) {
+			output += s.toString();
+		}
+		return output;
+	}
+	
+	// shuffle songs in playlists
+	public String shufflePlaylist(String playlist) {
+		if (playlists.size() == 0) return "You have no playlists.";
+		
+		for (PlayList p : playlists) {
+			String output = playlist + " was shuffled!\n";
+			if (p.getName().equals(playlist)) {
+				int index = playlists.indexOf(p);
+				ArrayList<Song> songList = p.getPlayList();
+				Collections.shuffle(songList);
+				for (Song s : songList) output += s.toString();
+				PlayList shuffledPlayList = new PlayList(playlist, songList);
+				playlists.set(index, shuffledPlayList);
+				return output;
+			}
+		}
+		return "Playlist not found!";
+	}
+	
+	// get album information from song search
+	public String getAlbumInformationBySong(String title) {
+		String output = "\n";
+		
+		for (Song s : songs) {
+			if (s.getTitle().toLowerCase().equals(title.toLowerCase())) {
+				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
+				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+				output += album.toString();
+				if (!(albums.contains(album))) output += "Album not in library.\n";
+			}
+		}
+		return output;
+	}
+	
+	// get album information from song search
+	public String getAlbumInformationByArtist(String artist) {
+		String output = "\n";
+			
+		for (Song s : songs) {
+			if (s.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
+				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+				output += album.toString();
+				if (!(albums.contains(album))) output += "Album not in library.\n";
+			}
+		}
+		return output;
 	}
 	
 	/* searches the library for any songs matching the title argument
