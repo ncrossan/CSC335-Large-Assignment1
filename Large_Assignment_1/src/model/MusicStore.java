@@ -34,6 +34,7 @@ class MusicStore {
 		String[] textHeader = fileReader.nextLine().split(",");
 		String artist = textHeader[1]; // get artist name
 		String albumTitle = textHeader[0];
+		String genre = textHeader[2];
 		Album album = new Album(albumTitle, textHeader[1],
 								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
 		albumList.add(album);
@@ -41,7 +42,7 @@ class MusicStore {
 		// add list of songs to album
 		while (fileReader.hasNextLine()) {
 			String songName = fileReader.nextLine(); // read song names from file
-			Song song = new Song(songName, artist, albumTitle); // create song object
+			Song song = new Song(songName, artist, albumTitle, genre); // create song object
 			album.addSong(song);
 		}
 	}
@@ -172,7 +173,7 @@ class MusicStore {
 			if (title.toLowerCase().equals(a.getTitle().toLowerCase()) && 
 					artist.toLowerCase().equals(a.getArtist().toLowerCase())) {
 				// deeper copy is not needed because Song is immutable
-				return new Album(a);
+				return a;
 			}
 		}
 		return null;
