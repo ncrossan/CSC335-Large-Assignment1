@@ -38,11 +38,12 @@ public class View {
             System.out.println("1. Search in Music Store");
             System.out.println("2. Search in User Library");
             System.out.println("3. Add to Library");
-            System.out.println("4. Get Lists from Library");
-            System.out.println("5. Manage Playlists");
-            System.out.println("6. Mark a Song as Favorite");
-            System.out.println("7. Rate a Song");
-            System.out.println("8. Exit Program");
+            System.out.println("4. Remove from Library");
+            System.out.println("5. Get Lists from Library");
+            System.out.println("6. Manage Playlists");
+            System.out.println("7. Mark a Song as Favorite");
+            System.out.println("8. Rate a Song");
+            System.out.println("9. Exit Program");
             System.out.print("Enter your choice with a number: ");
             
             String choice = scanner.nextLine();
@@ -60,24 +61,28 @@ public class View {
             case "3":
                 addToLibrary(library, scanner);
                 break;
-
+                
             case "4":
-                getListsFromLibrary(library, scanner);
+                removeFromLibrary(library, scanner);
                 break;
 
             case "5":
-                managePlaylists(library, scanner);
+                getListsFromLibrary(library, scanner);
                 break;
 
             case "6":
-                markFavorite(library, scanner);
+                managePlaylists(library, scanner);
                 break;
 
             case "7":
-                rateSong(library, scanner);
+                markFavorite(library, scanner);
                 break;
 
             case "8":
+                rateSong(library, scanner);
+                break;
+
+            case "9":
             	UserAccountManager.saveUserData(user, library);
                 System.out.println("Exiting...");
                 scanner.close();
@@ -200,7 +205,7 @@ public class View {
     	System.out.println("1. Get additional album information");
     	System.out.println("2. Back");
     	
-    	System.out.println("Enter your choice: ");
+    	System.out.print("Enter your choice: ");
     	
     	String choice = scanner.nextLine();
     	
@@ -251,6 +256,47 @@ public class View {
                 System.out.print("Enter artist: ");
                 String artistInput = scanner.nextLine();
                 System.out.println(library.addAlbum(albumTitleInput, artistInput));
+                break;
+                
+            // return to main menu
+            case "3":
+            	break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+    
+    // Remove song/album from Library
+    private static void removeFromLibrary(LibraryModel library, Scanner scanner) {
+    	// print library menu options
+        System.out.println("\n==== Remove from Library ====");
+        System.out.println("1. Remove a song to the library");
+        System.out.println("2. Remove an album to the library");
+        System.out.println("3. Back");
+        
+        System.out.print("Enter your choice: ");
+
+        String choice = scanner.nextLine();
+        
+        // perform operations based on user input
+        switch (choice) {
+        	// remove song to library
+            case "1":
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                System.out.println(library.removeSong(songTitle, artist));
+                break;
+            
+            // remove album to library
+            case "2":
+                System.out.print("Enter album title: ");
+                String albumTitleInput = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artistInput = scanner.nextLine();
+                System.out.println(library.removeAlbum(albumTitleInput, artistInput));
                 break;
                 
             // return to main menu

@@ -336,7 +336,10 @@ public class LibraryModel {
 				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
 				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
 				output += album.toString();
-				if (!(albums.contains(album))) output += "Album not in library.\n";
+				for (Album a : albums) {
+					if (a.getTitle().equals(album.getTitle()))  return output += "Album in library.\n";
+				}
+				output += "Album not in library.\n";
 			}
 		}
 		return output;
@@ -351,7 +354,10 @@ public class LibraryModel {
 				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
 				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
 				output += album.toString();
-				if (!(albums.contains(album))) output += "Album not in library.\n";
+				for (Album a : albums) {
+					if (a.getTitle().equals(album.getTitle()))  return output += "Album in library.\n";
+				}
+				output += "Album not in library.\n";
 			}
 		}
 		return output;
@@ -370,7 +376,6 @@ public class LibraryModel {
 		String result = "";
 		for (Song s : songs) {
 			if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
-				result += s.toString() + " in " + s.getAlbum() + ", ";
 				result += s.toString() + " in " + s.getAlbum() + "\n";
 			}
 		}
