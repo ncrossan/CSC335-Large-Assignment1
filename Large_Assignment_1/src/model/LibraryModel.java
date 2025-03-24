@@ -135,7 +135,7 @@ public class LibraryModel {
 	 */
 	public String addSong(String title, String artist) {
 		Song song = musicStore.getSong(title, artist);
-		if (songs.contains(song)) return "Song is already in library";
+		if (songs.contains(song)) return "Song already in library";
 		if (song != null) {
 			songs.add(musicStore.getSong(title, artist));
 			return "added " + song.toString() + " to library";
@@ -400,6 +400,18 @@ public class LibraryModel {
 		}
 		if (result.equals("")) return artist + " not found in library";
 		return result;
+	}
+	
+	// search songs by genre
+	public String searchSongByGenre(String genre) {
+		String output = genre + " songs:\n";
+		
+		for (Song s : songs) {
+			Album album = musicStore.getAlbum(s.getAlbum(), s.getArtist());
+			if (album.getGenre().toLowerCase().equals(genre.toLowerCase())) output += s.toString() + "\n";
+		}
+		
+		return output;
 	}
 	
 	/* searches the library for any albums matching the title argument

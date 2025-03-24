@@ -146,10 +146,11 @@ public class View {
         System.out.println("\n===== Search User Library =====");
         System.out.println("1. Search for a song by title");
         System.out.println("2. Search for a song by artist");
-        System.out.println("3. Search for an album by title");
-        System.out.println("4. Search for an album by artist");
-        System.out.println("5. Search for a playlist by name");
-        System.out.println("6. Back");
+        System.out.println("3. Search for songs by genre");
+        System.out.println("4. Search for an album by title");
+        System.out.println("5. Search for an album by artist");
+        System.out.println("6. Search for a playlist by name");
+        System.out.println("7. Back");
 
         System.out.print("Enter your choice with a number: ");
 
@@ -175,23 +176,29 @@ public class View {
                 break;
 
             case "3":
+                System.out.print("Enter genre: ");
+                String genre = scanner.nextLine();
+                System.out.println(library.searchSongByGenre(genre));
+                break;
+                
+            case "4":
                 System.out.print("Enter album title: ");
                 String albumTitle = scanner.nextLine();
                 System.out.println(library.searchAlbumByTitle(albumTitle));
                 break;
 
-            case "4":
+            case "5":
                 System.out.print("Enter artist: ");
                 String albumArtist = scanner.nextLine();
                 System.out.println(library.searchAlbumByArtist(albumArtist));
                 break;
 
-            case "5":
+            case "6":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
                 System.out.println(library.searchPlayListByName(playlistName));
                 break;
-            case "6":
+            case "7":
             	break;
 
             default:
