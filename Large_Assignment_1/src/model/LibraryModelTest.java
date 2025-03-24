@@ -1,181 +1,345 @@
-/* Authors: Nathan Crossman, Andy Zhang
- * Course: CSC 335
- * Description: An instance of this class represents a Music Store.
- */
 package model;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.io.File;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.FileNotFoundException;
 
-class MusicStore {
-	private ArrayList<Album> albumList;
+import org.junit.jupiter.api.Test;
+
+class LibraryModelTest {
 	
-	// constructor method
-	public MusicStore() throws FileNotFoundException {
-		// load albums and songs from text files
-		File directory = new File("src/albums");
-		albumList = new ArrayList<Album>();
+	@Test
+	void testAddPlayList() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addPlayList("newPlaylist");
+		library.addSong("Rolling in the Deep", "Adele");
+		assertEquals(library.searchPlayListByName("wrongPlaylist"), "wrongPlaylist Playlist not found!");
+		library.addSongToPlayList("newPlaylist", "Rolling in the Deep", "Adele");
+		assertEquals(library.searchPlayListByName("newPlaylist"), "newPlaylist\nRolling in the Deep by Adele\n");
+	}
+	
+	@Test
+	void testAddSongToPlayList() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addPlayList("newPlaylist");
+		library.addSong("Rolling in the Deep", "Adele");
+		assertEquals(library.addSongToPlayList("newPlaylist", "Hello", "Adele"), "Song not found!");
+		assertEquals(library.addSongToPlayList("newPlaylist", "Rolling in the Deep", "Adele"), "Song added!");
+		assertEquals(library.addSongToPlayList("wrongPlaylist", "Rolling in the Deep", "Adele"), "Couldn't perform operation.");
+	}
+	
+	@Test
+	void testSearchPlayListByName() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addPlayList("newPlaylist");
+		library.addSong("Rolling in the Deep", "Adele");
+		assertEquals(library.removeSongFromPlayList("newPlaylist", "Hello", "Adele"), "Song not found!");
+		assertEquals(library.removeSongFromPlayList("newPlaylist", "Rolling in the Deep", "Adele"), "Song not found!");
+		assertEquals(library.removeSongFromPlayList("wrongPlaylist", "Rolling in the Deep", "Adele"), "Couldn't perform operation.");
+	}
+	
+	@Test
+	void testAddSong() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.addSong("Rolling in the Deep", "Adele"), "added Rolling in the Deep by Adele to library");
+		assertEquals(library.addSong("Hello", "Adele"), "Song not found in Music Store!");
+	}
+	
+	@Test
+	void testAddAlbum() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.addAlbum("21", "Adele"), "added 21 by Adele to library");
+		assertEquals(library.addAlbum("fake", "none"), "Album not found in Music Store!");
+	}
+	
+	@Test
+	void testAddRating() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		assertEquals(library.addRating("Lovesong", "Adele", 4), "Lovesong by Adele was rated 4");
+		library.addSong("He Won't Go", "Adele");
+		library.addRating("He Won't Go", "Adele", 5);
+		assertEquals(library.getFavorites(), "favorites\nHe Won't Go by Adele\n");
+	}
+	
+	@Test
+	void testFavorite() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.favorite("Hello", "Adele"), "Song was not found in the library!");
+		library.addSong("Lovesong", "Adele");
+		assertEquals(library.favorite("Lovesong", "Adele"), "added Lovesong by Adele to favorites");
+	}
+	
+	@Test
+	void testGetSongs() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.getSongs(), "No songs in library yet!");
+		library.addSong("Lovesong", "Adele");
+		assertEquals(library.getSongs(), "Songs in library:\nLovesong\n");
 		
-		// loop through text files
-		for (File file : directory.listFiles()) {
-			if (file.getName().equals("albums.txt")) { continue; } // skip albums file
-			Scanner fileReader = new Scanner(file);
-			parseFile(fileReader);
-			
-			fileReader.close();
-		}
-	}
-	/* parses each album text file and creates song and album objects to put them in the music
-	 * store.
-	 */
-	private void parseFile(Scanner fileReader) {
-		String[] textHeader = fileReader.nextLine().split(",");
-		String artist = textHeader[1]; // get artist name
-		String albumTitle = textHeader[0];
-		String genre = textHeader[2];
-		Album album = new Album(albumTitle, textHeader[1],
-								textHeader[2], Integer.parseInt(textHeader[3])); // create album object
-		albumList.add(album);
-		
-		// add list of songs to album
-		while (fileReader.hasNextLine()) {
-			String songName = fileReader.nextLine(); // read song names from file
-			Song song = new Song(songName, artist, albumTitle, genre); // create song object
-			album.addSong(song);
-		}
 	}
 	
-	/* searches the MusicStore for an Album given a String of
-	 * the title of an album. Returns the Album's information and songs if
-	 * it is found, otherwise return a message indicating nothing was found.
-	 * Arguments:
-	 * 		title: a string of the title of the album to search for
-	 * Returns:
-	 * 		message: an Album's information and the songs in it or a message indicating
-	 * 		nothing was found
-	 */
-	public String searchAlbumByTitle(String title) {
-		String message = "";
-		// loop through every album in albumList to find the album(s) matching the title
-		for (Album a : albumList) {
-			if (a.getTitle().toLowerCase().equals(title.toLowerCase())) {
-				return a.toString();
-			}
-		}
-		// if no albums are found, set message to "Album not found!"
-		if (message.equals("")) message += "Album not found!";
-		return message;
-	}
-	/* searches the MusicStore for an Album given a String of
-	 * the name of an artist. Returns the Album's information and songs if
-	 * it is found, otherwise return a message indicating nothing was found.
-	 * Arguments:
-	 * 		name: a string of the name of the artist to search for
-	 * Returns:
-	 * 		message: an Album's information and the songs in it or a message indicating
-	 * 		nothing was found
-	 */
-	public String searchAlbumByArtist(String artist) {
-		String message = "";
-		// loop through every album in albumList to find the album(s) from the artist
-		for (Album a : albumList) {
-			if (a.getArtist().toLowerCase().equals(artist.toLowerCase())) {
-				message += a.toString();
-			}
-		}
-		// if no albums are found, set message to "Album not found!"
-		if (message.equals("")) message += "Album not found!";
-		return message;
+	@Test
+	void testGetAlbums() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.getAlbums(), "No Albums yet!");
+		library.addAlbum("21", "Adele");
+		assertEquals(library.getAlbums(), "Albums in library:\n"
+										+ "21, Adele, Pop, 2011\n"
+										+ "Rolling in the Deep\n"
+										+ "Rumour Has It\n"
+										+ "Turning Tables\n"
+										+ "Don't You Remember\n"
+										+ "Set Fire to the Rain\n"
+										+ "He Won't Go\n"
+										+ "Take It All\n"
+										+ "I'll Be Waiting\n"
+										+ "One and Only\n"
+										+ "Lovesong\n"
+										+ "Someone Like You\n"
+										+ "I Found a Boy\n");
 	}
 	
-	/* searches through every Song in the MusicStore for a song
-	 * matching the name argument, any songs will be returned with their
-	 * title, artist, and the album they are in.
-	 * Arguments:
-	 * 		name: a string of a name of a song
-	 * Returns:
-	 * 		message: a string of every found song's information or a string
-	 * 		detailing that nothing was found
-	 */
-	public String searchSongByTitle(String title) {
-		String message = "";
-		// loop through every album in albumList and every song in each album
-		// to find songs matching the title of the argument
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (title.toLowerCase().equals(s.getTitle().toLowerCase())) {
-					message += s.toString() +  " in " + a.getTitle() + "\n";
-				}
-			}
-		}
-		// if no songs are found, set message to "Song not found!"
-		if (message.equals("")) message += "Song not found!";
-		return message;
+	@Test
+	void testArtists() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.getArtists(), "No artists in library yet!");
+		library.addAlbum("21", "Adele");
+		library.addAlbum("Old Ideas", "Leonard Cohen");
+		assertEquals(library.getArtists(), "Artists in library:\nAdele\nLeonard Cohen\n");
 	}
-	/* searches through every Song in the MusicStore for a song
-	 * matching the title argument, any songs will be returned with their
-	 * title, artist, and the album they are in.
-	 * Arguments:
-	 * 		name: a string of an artist's name
-	 * Returns:
-	 * 		message: a string of every found song's information or a string
-	 * 		detailing that nothing was found
-	 */
-	public String searchSongByArtist(String artist) {
-		String message = "";
-		// loop through every album in albumList and every song in each album
-		// to find songs matching the artist of the argument
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-					message += s.toString() + " in " + a.getTitle() + "\n";
-				}
-			}
-		}
-		// if no songs are found, set message to "Song not found!"
-		if (message.toLowerCase().equals("")) message += "Song not found!";
-		return message;
+	
+	@Test
+	void testGetPlayLists() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.getPlayLists(), "No Playlists yet!");
+		library.addPlayList("p1");
+		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!\n");
+		library.addSong("He Won't Go", "Adele");
+		library.addSongToPlayList("p1", "He Won't Go", "Adele");
+		assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
 	}
-	/* gets a song from the music store given a title and artist of a song
-	 * no access modifier so only LibraryModel can use this method
-	 * Arguments:
-	 * 		title: title of a song
-	 * 		artist: name of an artist
-	 * Returns:
-	 * 		s: a Song object
-	 * 		null if nothing was found
-	 */
-	Song getSong(String title, String artist) {
-		for (Album a : albumList) {
-			for (Song s : a.getSongs()) {
-				if (title.toLowerCase().equals(s.getTitle().toLowerCase()) && 
-						artist.toLowerCase().equals(s.getArtist().toLowerCase())) {
-					// escaping reference is not a problem because Song is immutable
-					return s;
-				}
-			}
-		}
-		return null;
+	
+	@Test
+	void testGetFavorites() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		library.favorite("Lovesong", "Adele");
+		assertEquals(library.getFavorites(), "favorites\nLovesong by Adele\n");
 	}
-	/* gets an album from the music store given a title and artist of an album no
-	 * access modifier so only LibraryModel can use this method
-	 * Arguments:
-	 * 		title: title of an album
-	 * 		artist: name of an artist
-	 * Returns:
-	 * 		Album(a): a copy of the album inside music store
-	 * 		null if nothing was found
-	 */
-	Album getAlbum(String title, String artist) {
-		for (Album a : albumList) {
-			if (title.toLowerCase().equals(a.getTitle().toLowerCase()) && 
-					artist.toLowerCase().equals(a.getArtist().toLowerCase())) {
-				// deeper copy is not needed because Song is immutable
-				return a;
-			}
-		}
-		return null;
+	
+	@Test
+	void testSearchSongByTitle() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.searchSongByTitle("Lovesong"), "Lovesong not found in library");
+		library.addSong("He Won't Go", "Adele");
+		assertEquals(library.searchSongByTitle("He Won't Go"), "He Won't Go by Adele in 21\n");
 	}
+	
+	@Test
+	void testSearchSongByArtist() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.searchSongByArtist("Adele"), "Adele not found in library");
+		library.addSong("He Won't Go", "Adele");
+		library.addSong("Daydreamer", "Adele");
+		assertEquals(library.searchSongByArtist("Adele"), "He Won't Go by Adele in 21\nDaydreamer by Adele in 19\n");
+	}
+	
+	@Test
+	void testSearchAlbumByTitle() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.searchAlbumByTitle("21"), "21 not found in library");
+		library.addAlbum("21", "Adele");
+		assertEquals(library.searchAlbumByTitle("21"), "21, Adele, Pop, 2011\n"
+														+ "Rolling in the Deep\n"
+														+ "Rumour Has It\n"
+														+ "Turning Tables\n"
+														+ "Don't You Remember\n"
+														+ "Set Fire to the Rain\n"
+														+ "He Won't Go\n"
+														+ "Take It All\n"
+														+ "I'll Be Waiting\n"
+														+ "One and Only\n"
+														+ "Lovesong\n"
+														+ "Someone Like You\n"
+														+ "I Found a Boy\n");
+	}
+	
+	@Test
+	void testSearchAlbumByArtist() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		assertEquals(library.searchAlbumByArtist("Adele"), "Adele not found in library");
+		library.addAlbum("21", "Adele");
+		assertEquals(library.searchAlbumByArtist("Adele"), "21, Adele, Pop, 2011\n"
+															+ "Rolling in the Deep\n"
+															+ "Rumour Has It\n"
+															+ "Turning Tables\n"
+															+ "Don't You Remember\n"
+															+ "Set Fire to the Rain\n"
+															+ "He Won't Go\n"
+															+ "Take It All\n"
+															+ "I'll Be Waiting\n"
+															+ "One and Only\n"
+															+ "Lovesong\n"
+															+ "Someone Like You\n"
+															+ "I Found a Boy\n");
+	}
+	
+	@Test
+	void testPlaySong() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		assertEquals(library.playSong("He won't go", "Adele"), "Playing He Won't Go by Adele");
+		assertEquals(library.playSong("asd", ""), "asd by  not found in library.");
+	}
+	
+	@Test
+	void testGetRecentlyPlayed() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		assertEquals(library.getRecentlyPlayed(), "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Someone Like You", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Lovesong", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Set Fire to the Rain", "Adele");
+		assertEquals(library.getRecentlyPlayed(), "Set Fire to the Rain by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rolling in the Deep by Adele\n");
+	}
+	
+	@Test
+	// write this test case last as the order shifts when changing code
+	void testGetMostPlayedSongs() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 3 plays\n");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Turning Tables", "Adele");
+		library.playSong("Someone Like You", "Adele");
+		library.playSong("Rolling in the Deep", "Adele");
+		library.playSong("Lovesong", "Adele");
+		library.playSong("Don't You Remember", "Adele");
+		library.playSong("Set Fire to the Rain", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
+				+ "Turning Tables by Adele: 2 plays\n"
+				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Lovesong by Adele: 1 plays\n"
+				+ "Set Fire to the Rain by Adele: 1 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n");
+		library.addAlbum("19", "Adele");
+		library.playSong("Daydreamer", "Adele");
+		library.playSong("Best for Last", "Adele");
+		library.playSong("Chasing Pavements", "Adele");
+		library.playSong("Crazy for You", "Adele");
+		library.playSong("Melt My Heart to Stone", "Adele");
+		library.playSong("Melt My Heart to Stone", "Adele");
+		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
+				+ "Turning Tables by Adele: 2 plays\n"
+				+ "Melt My Heart to Stone by Adele: 2 plays\n"
+				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Lovesong by Adele: 1 plays\n"
+				+ "Set Fire to the Rain by Adele: 1 plays\n"
+				+ "Best for Last by Adele: 1 plays\n"
+				+ "Chasing Pavements by Adele: 1 plays\n"
+				+ "Crazy for You by Adele: 1 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n");
+	}
+	
+	@Test
+	void testGetSortedSongsByTitle() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addAlbum("19", "Adele");
+		assertEquals(library.getSortedSongsByTitle(), "Best for Last by Adele\n"
+				+ "Chasing Pavements by Adele\n"
+				+ "Cold Shoulder by Adele\n"
+				+ "Crazy for You by Adele\n"
+				+ "Daydreamer by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "First Love by Adele\n"
+				+ "He Won't Go by Adele\n"
+				+ "Hometown Glory by Adele\n"
+				+ "I Found a Boy by Adele\n"
+				+ "I'll Be Waiting by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Make You Feel My Love by Adele\n"
+				+ "Melt My Heart to Stone by Adele\n"
+				+ "My Same by Adele\n"
+				+ "One and Only by Adele\n"
+				+ "Right as Rain by Adele\n"
+				+ "Rolling in the Deep by Adele\n"
+				+ "Rumour Has It by Adele\n"
+				+ "Set Fire to the Rain by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "Take It All by Adele\n"
+				+ "Tired by Adele\n"
+				+ "Turning Tables by Adele\n");
+	}
+	
+	@Test
+	void testGetSortedSongsByArtist() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addAlbum("Old Ideas", "Leonard Cohen");
+		assertEquals(library.getSortedSongsByArtist(), "Rolling in the Deep by Adele\n"
+				+ "Rumour Has It by Adele\n"
+				+ "Turning Tables by Adele\n"
+				+ "Don't You Remember by Adele\n"
+				+ "Set Fire to the Rain by Adele\n"
+				+ "He Won't Go by Adele\n"
+				+ "Take It All by Adele\n"
+				+ "I'll Be Waiting by Adele\n"
+				+ "One and Only by Adele\n"
+				+ "Lovesong by Adele\n"
+				+ "Someone Like You by Adele\n"
+				+ "I Found a Boy by Adele\n"
+				+ "Going Home by Leonard Cohen\n"
+				+ "Amen by Leonard Cohen\n"
+				+ "Show Me the Place by Leonard Cohen\n"
+				+ "Darkness by Leonard Cohen\n"
+				+ "Anyhow by Leonard Cohen\n"
+				+ "Crazy to Love You by Leonard Cohen\n"
+				+ "Come Healing by Leonard Cohen\n"
+				+ "Banjo by Leonard Cohen\n"
+				+ "Lullaby by Leonard Cohen\n"
+				+ "Different Sides by Leonard Cohen\n");
+	}
+	
+	@Test
+	// order changes if two songs have the same rating so write this testcase last
+	void testGetSortedRatings() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addRating("Take It All", "Adele", 5);
+		library.addRating("Someone Like You", "Adele", 3);
+		library.addRating("Don't You Remember", "Adele", 1);
+		library.addRating("Rolling in the Deep", "Adele", 2);
+		library.addRating("One and Only", "Adele", 5);
+		assertEquals(library.getSortedRatings(), "Don't You Remember by Adele: 1\n"
+				+ "Rolling in the Deep by Adele: 2\n"
+				+ "Someone Like You by Adele: 3\n"
+				+ "Take It All by Adele: 5\n"
+				+ "One and Only by Adele: 5\n");
+	}
+
 }
