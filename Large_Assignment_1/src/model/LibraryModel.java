@@ -368,7 +368,14 @@ public class LibraryModel {
 		return song.toString() + " removed.";
 	}
 	
-	// remove song from album in library
+	/* removes an album from albums ArrayList
+	 * Arguments:
+	 * 		title:  name of album
+	 *  	artist: name of artist
+	 * Returns:
+	 * 		a String about operation success
+	 * 
+	 */
 	public String removeAlbum(String title, String artist) {
 		Album album = musicStore.getAlbum(title, artist);
 		if (!(albums.contains(album)) || album.equals(null)) {
@@ -381,7 +388,13 @@ public class LibraryModel {
 		return title + " by " + artist + " removed.";
 	}
 	
-	// shuffle songs ArrayList
+	/* This method shuffles the songs ArrayList using Collections.shuffle
+	 * Arguments:
+	 * 		none
+	 * Returns:
+	 * 		a String about operation success and output of the shuffled songs list
+	 * 
+	 */
 	public String shuffleSongs() {
 		if (songs.size() == 0) return "There are no songs in your library.";
 		String output = "Songs shuffled!\n";
@@ -392,7 +405,13 @@ public class LibraryModel {
 		return output;
 	}
 	
-	// shuffle songs in playlists
+	/* This method shuffles a playlist using Collections.shuffle
+	 * Arguments:
+	 * 		playlist:  name of playlist
+	 * Returns:
+	 * 		a String about operation success and the output of the shuffled playlist
+	 * 
+	 */
 	public String shufflePlaylist(String playlist) {
 		if (playlists.size() == 0) return "You have no playlists.";
 		
@@ -411,7 +430,13 @@ public class LibraryModel {
 		return "Playlist not found!";
 	}
 	
-	// get album information from song search
+	/* This method returns additional info about the album based on the song title
+	 * Arguments:
+	 * 		title:  name of song
+	 * Returns:
+	 * 		album instance variables in String
+	 * 
+	 */
 	public String getAlbumInformationBySong(String title) {
 		String output = "\n";
 		
@@ -429,7 +454,12 @@ public class LibraryModel {
 		return output;
 	}
 	
-	// get album information from song search
+	/* This method returns additional info about the album based on the artist
+	 * Arguments:
+	 * 		artist:  name of artist
+	 * Returns:
+	 * 		instance variables of Album and the toString data
+	 */
 	public String getAlbumInformationByArtist(String artist) {
 		String output = "\n";
 			
@@ -486,7 +516,12 @@ public class LibraryModel {
 		return result;
 	}
 	
-	// search song list by genre
+	/* This method returns a list of songs based on the genre
+	 * Arguments:
+	 * 		genre:  genre type
+	 * Returns:
+	 * 		String of songs
+	 */
 	public String searchSongByGenre(String genre) {
 		String output = genre + " songs:\n";
 		
