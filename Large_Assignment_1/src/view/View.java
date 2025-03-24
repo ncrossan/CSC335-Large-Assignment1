@@ -1,8 +1,11 @@
 /* Authors: Nathan Crossan, Andy Zhang
  * Course: CSC 335
  * Description: the view of the music library
+<<<<<<< HEAD
+=======
  * NOTE: ALL methods were generated using AI, then edited
  * to reduce the number of unwanted outputs.
+>>>>>>> refs/remotes/origin/main
  */
 package view;
 import java.io.FileNotFoundException;
@@ -18,13 +21,15 @@ public class View {
 	 */
 	public static void promptUser() throws FileNotFoundException {
 		// prompt the user for login/account creation
+		String user = "";
 		try {
-			UserAccountManager.menu();
+			user = UserAccountManager.menu();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		LibraryModel library = new LibraryModel();
+		UserAccountManager.loadUserData(user, library);
 		Scanner scanner = new Scanner(System.in);
 		// program main loop
         while (true) {
@@ -33,11 +38,12 @@ public class View {
             System.out.println("1. Search in Music Store");
             System.out.println("2. Search in User Library");
             System.out.println("3. Add to Library");
-            System.out.println("4. Get Lists from Library");
-            System.out.println("5. Manage Playlists");
-            System.out.println("6. Mark a Song as Favorite");
-            System.out.println("7. Rate a Song");
-            System.out.println("8. Exit Program");
+            System.out.println("4. Remove from Library");
+            System.out.println("5. Get Lists from Library");
+            System.out.println("6. Manage Playlists");
+            System.out.println("7. Mark a Song as Favorite");
+            System.out.println("8. Rate a Song");
+            System.out.println("9. Exit Program");
             System.out.print("Enter your choice with a number: ");
             
             String choice = scanner.nextLine();
@@ -55,24 +61,29 @@ public class View {
             case "3":
                 addToLibrary(library, scanner);
                 break;
-
+                
             case "4":
-                getListsFromLibrary(library, scanner);
+                removeFromLibrary(library, scanner);
                 break;
 
             case "5":
-                managePlaylists(library, scanner);
+                getListsFromLibrary(library, scanner);
                 break;
 
             case "6":
-                markFavorite(library, scanner);
+                managePlaylists(library, scanner);
                 break;
 
             case "7":
-                rateSong(library, scanner);
+                markFavorite(library, scanner);
                 break;
 
             case "8":
+                rateSong(library, scanner);
+                break;
+
+            case "9":
+            	UserAccountManager.saveUserData(user, library);
                 System.out.println("Exiting...");
                 scanner.close();
                 return;
@@ -148,13 +159,19 @@ public class View {
             case "1":
                 System.out.print("Enter song title: ");
                 String songTitle = scanner.nextLine();
-                System.out.println(library.searchSongByTitle(songTitle));
+                String output1 = library.searchSongByTitle(songTitle);
+                System.out.println(output1);
+                if (output1.contains("not found")) break;
+                getAlbumInformation(library, scanner, "song", songTitle);
                 break;
 
             case "2":
                 System.out.print("Enter artist: ");
                 String artist = scanner.nextLine();
-                System.out.println(library.searchSongByArtist(artist));
+                String output2 = library.searchSongByArtist(artist);
+                System.out.println(output2);
+                if (output2.contains("not found")) break;
+                getAlbumInformation(library, scanner, "artist", artist);
                 break;
 
             case "3":
@@ -180,6 +197,33 @@ public class View {
             default:
                 System.out.println("Invalid choice.");
         }
+    }
+    
+    // Get album information from song search
+    private static void getAlbumInformation(LibraryModel library, Scanner scanner, String query, String userSearch) {
+    	System.out.println("\n===== Album Information =====");
+    	System.out.println("1. Get additional album information");
+    	System.out.println("2. Back");
+    	
+    	System.out.print("Enter your choice: ");
+    	
+    	String choice = scanner.nextLine();
+    	
+    	// perform operations based on user input
+    	switch (choice) {
+    		// get album information
+    		case "1":
+    			if (query.equals("song")) System.out.println(library.getAlbumInformationBySong(userSearch));
+    			else System.out.println(library.getAlbumInformationByArtist(userSearch));
+    			break;
+    		
+    		// return to main menu
+    		case "2":
+    			break;
+    		
+    		default:
+    			System.out.println("Invalid choice.");
+    	}
     }
 
     // Add to Library
@@ -213,7 +257,48 @@ public class View {
                 String artistInput = scanner.nextLine();
                 System.out.println(library.addAlbum(albumTitleInput, artistInput));
                 break;
+                
+            // return to main menu
+            case "3":
+            	break;
 
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+    
+    // Remove song/album from Library
+    private static void removeFromLibrary(LibraryModel library, Scanner scanner) {
+    	// print library menu options
+        System.out.println("\n==== Remove from Library ====");
+        System.out.println("1. Remove a song to the library");
+        System.out.println("2. Remove an album to the library");
+        System.out.println("3. Back");
+        
+        System.out.print("Enter your choice: ");
+
+        String choice = scanner.nextLine();
+        
+        // perform operations based on user input
+        switch (choice) {
+        	// remove song to library
+            case "1":
+                System.out.print("Enter song title: ");
+                String songTitle = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artist = scanner.nextLine();
+                System.out.println(library.removeSong(songTitle, artist));
+                break;
+            
+            // remove album to library
+            case "2":
+                System.out.print("Enter album title: ");
+                String albumTitleInput = scanner.nextLine();
+                System.out.print("Enter artist: ");
+                String artistInput = scanner.nextLine();
+                System.out.println(library.removeAlbum(albumTitleInput, artistInput));
+                break;
+                
             // return to main menu
             case "3":
             	break;
@@ -228,11 +313,12 @@ public class View {
     	// print listing menu options
         System.out.println("\n===== Library Lists =====");
         System.out.println("1. List of song titles");
-        System.out.println("2. List of artists");
-        System.out.println("3. List of albums");
-        System.out.println("4. List of playlists");
-        System.out.println("5. List of favorite songs");
-        System.out.println("6. Back");
+        System.out.println("2. Shuffle song titles");
+        System.out.println("3. List of artists");
+        System.out.println("4. List of albums");
+        System.out.println("5. List of playlists");
+        System.out.println("6. List of favorite songs");
+        System.out.println("7. Back");
 
         System.out.print("Enter your choice: ");
 
@@ -245,22 +331,25 @@ public class View {
                 break;
             // list artists in library
             case "2":
+                System.out.println(library.shuffleSongs());
+                break;
+            case "3":
                 System.out.println(library.getArtists());
                 break;
             // list albums in library
-            case "3":
+            case "4":
                 System.out.println(library.getAlbums());
                 break;
             // list playlists in library
-            case "4":
+            case "5":
                 System.out.println(library.getPlayLists());
                 break;
             // list favorite songs in library
-            case "5":
+            case "6":
                 System.out.println(library.getFavorites());
                 break;
             // return to main menu
-            case "6":
+            case "7":
             	break;
             default:
                 System.out.println("Invalid choice.");
@@ -274,7 +363,8 @@ public class View {
         System.out.println("1. Create a new playlist");
         System.out.println("2. Add a song to a playlist");
         System.out.println("3. Remove a song from a playlist");
-        System.out.println("4. Back");
+        System.out.println("4. Shuffle a playlist");
+        System.out.println("5. Back");
         System.out.print("Enter your choice: ");
 
         String choice = scanner.nextLine();
@@ -305,11 +395,18 @@ public class View {
                 String removeSongTitle = scanner.nextLine();
                 System.out.print("Enter artist: ");
                 String removeArtist = scanner.nextLine();
+                library.removeSongFromPlayList(removePlaylistName, removeSongTitle, removeArtist);
+                System.out.println("Song removed from playlist: " + removePlaylistName);
                 System.out.println(library.removeSongFromPlayList(removePlaylistName, 
                 		removeSongTitle, removeArtist));
                 break;
             // return to main menu
             case "4":
+            	System.out.print("Enter playlist name: ");
+                String playlist = scanner.nextLine();
+                System.out.println(library.shufflePlaylist(playlist));
+            	break;
+            case "5":
             	break;
             default:
                 System.out.println("Invalid choice.");

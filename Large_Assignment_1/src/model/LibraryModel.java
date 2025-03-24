@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +91,8 @@ public class LibraryModel {
 		for (PlayList p : playlists) {
 			if (p.getName().equals(playlistName)) {
 				Song song = musicStore.getSong(title, artist);
-				if (song != null && songs.contains(song) && !(p.getPlayList().contains(song))) {
+				if (p.getPlayList().contains(song)) return "Song already added";
+				if (song != null && songs.contains(song)) {
 					p.addSong(song);
 					return "Song added!";
 				}
@@ -123,7 +126,6 @@ public class LibraryModel {
 		}
 		return "Couldn't perform operation.";
 	}
-	
 	/* adds a song to the library given the song title and the artist of the song
 	 * Arguments:
 	 * 		title: the name of the song to be added
@@ -256,7 +258,7 @@ public class LibraryModel {
 	 * 		result: a String with a list of all playlist names in the library
 	 */
 	public String getPlayLists() {
-		String result = "";
+		String result = "Playlists:\n";
 		for (PlayList p : playlists) {
 			result += p.toString();
 		}
@@ -273,6 +275,92 @@ public class LibraryModel {
 	 */
 	public String getFavorites() {
 		return favorites.toString();
+	}
+	
+	// remove song from library
+	public String removeSong(String title, String artist) {
+		Song song = musicStore.getSong(title, artist);
+		if (!(songs.contains(song)) || song.equals(null)) {
+			return "Song not found in library.";
+		}
+		songs.remove(song);
+		return song.toString() + " removed.";
+	}
+	
+	// remove song from album in library
+	public String removeAlbum(String title, String artist) {
+		Album album = musicStore.getAlbum(title, artist);
+		if (!(albums.contains(album)) || album.equals(null)) {
+			return "Album not found in library.";
+		}
+		albums.remove(album);
+		return title + " by " + artist + " removed.";
+	}
+	
+	// shuffle songs ArrayList
+	public String shuffleSongs() {
+		if (songs.size() == 0) return "There are no songs in your library.";
+		String output = "Songs shuffled!\n";
+		Collections.shuffle(songs);
+		for (Song s : songs) {
+			output += s.toString() + "\n";
+		}
+		return output;
+	}
+	
+	// shuffle songs in playlists
+	public String shufflePlaylist(String playlist) {
+		if (playlists.size() == 0) return "You have no playlists.";
+		
+		for (PlayList p : playlists) {
+			String output = playlist + " was shuffled!\n";
+			if (p.getName().equals(playlist)) {
+				int index = playlists.indexOf(p);
+				ArrayList<Song> songList = p.getPlayList();
+				Collections.shuffle(songList);
+				for (Song s : songList) output += s.toString();
+				PlayList shuffledPlayList = new PlayList(playlist, songList);
+				playlists.set(index, shuffledPlayList);
+				return output;
+			}
+		}
+		return "Playlist not found!";
+	}
+	
+	// get album information from song search
+	public String getAlbumInformationBySong(String title) {
+		String output = "\n";
+		
+		for (Song s : songs) {
+			if (s.getTitle().toLowerCase().equals(title.toLowerCase())) {
+				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
+				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+				output += album.toString();
+				for (Album a : albums) {
+					if (a.getTitle().equals(album.getTitle()))  return output += "Album in library.\n";
+				}
+				output += "Album not in library.\n";
+			}
+		}
+		return output;
+	}
+	
+	// get album information from song search
+	public String getAlbumInformationByArtist(String artist) {
+		String output = "\n";
+			
+		for (Song s : songs) {
+			if (s.getArtist().toLowerCase().equals(artist.toLowerCase())) {
+				Song song = musicStore.getSong(s.getTitle(), s.getArtist());
+				Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+				output += album.toString();
+				for (Album a : albums) {
+					if (a.getTitle().equals(album.getTitle()))  return output += "Album in library.\n";
+				}
+				output += "Album not in library.\n";
+			}
+		}
+		return output;
 	}
 	
 	/* searches the library for any songs matching the title argument
@@ -371,7 +459,7 @@ public class LibraryModel {
 	
 	// get the 10 most recently played songs
 	public String getRecentlyPlayed() {
-		String result = "";
+		String result = "Recently played:\n";
 		// add the recentlyPlayed ArrayList backwards to result
 		for (int i=0; i < recentlyPlayed.size(); i++) {
 			result += recentlyPlayed.get(recentlyPlayed.size()-1-i).toString() + "\n";
@@ -456,5 +544,54 @@ public class LibraryModel {
 	// call the methods of musicStore to search it
 	public String searchStoreAlbumByTitle(String title) {
 		return musicStore.searchAlbumByTitle(title);
+	}
+	
+	// return a shallow copy of songs
+	public String getSongListData() {
+		String output = "Songs:\n";
+		for (Song s : songs) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of albums
+	public String getAlbumListData() {
+		String output = "Albums:\n";
+		for (Album a : albums) {
+			output += a.getTitle() + ", " + a.getArtist() + ", " 
+					  + a.getGenre()+ ", " + a.getYear() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of playlists
+	public String getPlayListData() {
+		String output = "Playlists:\n";
+		for (PlayList p : playlists) {
+			output += "Playlist: " + p.getName() + "\n";
+			for (Song s : p.getPlayList()) {
+				output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+			}
+		}
+		return output;
+	}
+	
+	// return copy of favorites
+	public String getFavoritesData() {
+		String output = favorites.getName() + "\n";
+		for (Song s : favorites.getPlayList()) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of recentlyPlayed
+	public String getRecentlyPlayedData() {
+		String output = "Recents:\n";
+		for (Song s : recentlyPlayed) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
 	}
 }

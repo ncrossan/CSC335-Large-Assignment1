@@ -13,7 +13,7 @@ public class UserAccountManager {
         new File(USER_FOLDER).mkdirs();
     }
 
-    public static void menu() throws Exception {
+    public static String menu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         boolean loggedIn = false;
         String username = "";
@@ -60,6 +60,7 @@ public class UserAccountManager {
                 System.out.println("Invalid option. Try again.\n");
             }
         }
+        return userFile;
     }
 
     public static void initializeUserFile(String username) throws IOException {
@@ -82,6 +83,82 @@ public class UserAccountManager {
             out.println(saltedHash);
         }
     }
+    
+    // write user data to file in users directory
+    public static void saveUserData(String user, LibraryModel library) throws FileNotFoundException {
+    	String output = library.getSongListData() + "\n";
+    	output += library.getAlbumListData() + "\n";
+    	output += library.getPlayListData() + "\n";
+    	output += library.getFavoritesData() + "\n";
+    	output += library.getRecentlyPlayedData() + "\n";
+    	
+    	// write user data to user file
+    	try {
+    		PrintWriter outputFile = new PrintWriter(user);
+    		outputFile.println(output);
+    		outputFile.close();
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    // load user data to library
+    public static void loadUserData(String user, LibraryModel library) {
+    	try {
+    		BufferedReader fileReader = new BufferedReader(new FileReader(user));
+    		String line;
+    		while ((line = fileReader.readLine()) != null) {
+    			if (line.equals("\n") || line.equals("")) continue;
+    			if (line.equals("Songs:")) {
+    				while ((line = fileReader.readLine()) != "") {
+    					if (line.equals("")) break;
+    					String[] songArgs = line.split(", ");
+    					library.addSong(songArgs[0], songArgs[1]);
+    				}
+    			}
+    			else if (line.equals("Albums:")) {
+    				while ((line = fileReader.readLine()) != "") {
+    					if (line.equals("")) break;
+    					String[] albumArgs = line.split(", ");
+    					library.addAlbum(albumArgs[0], albumArgs[1]);
+    				}
+    			}
+    			else if (line.equals("Playlists:")) {
+    				String playlist = "";
+    				while ((line = fileReader.readLine()) != "") {
+    					if (line.equals("")) break;
+    					if (line.contains("Playlist:")) {
+    						playlist = line.split(" ")[1];
+    						library.addPlayList(playlist);
+    						continue;
+    					}
+    					String[] songArgs = line.split(", ");
+    					library.addSongToPlayList(playlist, songArgs[0], songArgs[1]);
+    				}
+    			}
+    			else if (line.equals("favorites")) {
+    				while ((line = fileReader.readLine()) != "") {
+    					if (line.equals("")) break;
+    					String[] songArgs = line.split(", ");
+    					library.favorite(songArgs[0], songArgs[1]);
+    				}
+    			}
+    			else if (line.equals("Recents:")) {
+    				while ((line = fileReader.readLine()) != "") {
+    					if (line.equals("")) break;
+    					String[] songArgs = line.split(", ");
+    					library.playSong(songArgs[0], songArgs[1]);
+    				}
+    			}
+    		}
+    		fileReader.close();
+    	}
+    	catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
     // verify the password for login
     private static boolean verifyPassword(String username, String password) throws Exception {
         File pwdFile = new File(USER_FOLDER + "/" + username + ".pwd");
