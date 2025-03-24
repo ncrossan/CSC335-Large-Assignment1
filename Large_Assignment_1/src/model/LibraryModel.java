@@ -482,6 +482,16 @@ public class LibraryModel {
 		return result;
 	}
 	
+	// search song list by genre
+	public String searchSongByGenre(String genre) {
+		String output = genre + " songs:\n";
+		
+		for (Song s : songs) {
+			if (s.getGenre().toLowerCase().equals(genre.toLowerCase())) output += s.toString() + "\n";
+		}
+		return output;
+	}
+	
 	/* searches the library for any albums matching the title argument
 	 * Arguments:
 	 * 		title: a title of an album to search for
