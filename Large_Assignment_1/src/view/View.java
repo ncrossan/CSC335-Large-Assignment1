@@ -21,13 +21,15 @@ public class View {
 	 */
 	public static void promptUser() throws FileNotFoundException {
 		// prompt the user for login/account creation
+		String user = "";
 		try {
-			UserAccountManager.menu();
+			user = UserAccountManager.menu();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		LibraryModel library = new LibraryModel();
+		UserAccountManager.loadUserData(user, library);
 		Scanner scanner = new Scanner(System.in);
 		// program main loop
         while (true) {
@@ -76,6 +78,7 @@ public class View {
                 break;
 
             case "8":
+            	UserAccountManager.saveUserData(user, library);
                 System.out.println("Exiting...");
                 scanner.close();
                 return;
@@ -287,8 +290,6 @@ public class View {
             case "1":
                 System.out.print("Enter playlist name: ");
                 String playlistName = scanner.nextLine();
-                library.addPlayList(playlistName);
-                System.out.println("Playlist created: " + playlistName);
                 System.out.println(library.addPlayList(playlistName));
                 break;
             // add song to playlist

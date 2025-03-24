@@ -256,7 +256,7 @@ public class LibraryModel {
 	 * 		result: a String with a list of all playlist names in the library
 	 */
 	public String getPlayLists() {
-		String result = "";
+		String result = "Playlists:\n";
 		for (PlayList p : playlists) {
 			result += p.toString();
 		}
@@ -370,7 +370,7 @@ public class LibraryModel {
 	}
 	
 	public String getRecentlyPlayed() {
-		String result = "";
+		String result = "Recently played:\n";
 		// add the recentlyPlayed ArrayList backwards to result
 		for (int i=0; i < recentlyPlayed.size(); i++) {
 			result += recentlyPlayed.get(recentlyPlayed.size()-1-i).toString() + "\n";
@@ -393,5 +393,54 @@ public class LibraryModel {
 	// call the methods of musicStore to search it
 	public String searchStoreAlbumByTitle(String title) {
 		return musicStore.searchAlbumByTitle(title);
+	}
+	
+	// return a shallow copy of songs
+	public String getSongListData() {
+		String output = "Songs:\n";
+		for (Song s : songs) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of albums
+	public String getAlbumListData() {
+		String output = "Albums:\n";
+		for (Album a : albums) {
+			output += a.getTitle() + ", " + a.getArtist() + ", " 
+					  + a.getGenre()+ ", " + a.getYear() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of playlists
+	public String getPlayListData() {
+		String output = "Playlists:\n";
+		for (PlayList p : playlists) {
+			output += "Playlist: " + p.getName() + "\n";
+			for (Song s : p.getPlayList()) {
+				output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+			}
+		}
+		return output;
+	}
+	
+	// return copy of favorites
+	public String getFavoritesData() {
+		String output = favorites.getName() + "\n";
+		for (Song s : favorites.getPlayList()) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
+	}
+	
+	// return copy of recentlyPlayed
+	public String getRecentlyPlayedData() {
+		String output = "Recents:\n";
+		for (Song s : recentlyPlayed) {
+			output += s.getTitle() + ", " + s.getArtist() + ", " + s.getAlbum() + "\n";
+		}
+		return output;
 	}
 }

@@ -17,6 +17,12 @@ class PlayList {
 		songs = new ArrayList<Song>();
 	}
 	
+	// copy constructor
+	public PlayList(PlayList playlist) {
+		this.name = playlist.getName();
+		this.songs = playlist.getPlayList();
+	}
+	
 	// adds a song to the songs ArrayList
 	public void addSong(Song song) {
 		songs.add(song);
