@@ -279,7 +279,7 @@ public class View {
     	// print library menu options
         System.out.println("\n==== Remove from Library ====");
         System.out.println("1. Remove a song to the library");
-        System.out.println("2. Remove an album to the library");
+        System.out.println("2. Remove an album from the library");
         System.out.println("3. Back");
         
         System.out.print("Enter your choice: ");
@@ -325,7 +325,8 @@ public class View {
         System.out.println("4. List of albums");
         System.out.println("5. List of playlists");
         System.out.println("6. List of favorite songs");
-        System.out.println("7. Back");
+        System.out.println("7. List of sorted songs");
+        System.out.println("8. Back");
 
         System.out.print("Enter your choice: ");
 
@@ -355,11 +356,42 @@ public class View {
             case "6":
                 System.out.println(library.getFavorites());
                 break;
-            // return to main menu
             case "7":
+            	getSortedLists(library, scanner);
+            	break;
+            // return to main menu
+            case "8":
             	break;
             default:
                 System.out.println("Invalid choice.");
+        }
+    }
+    private static void getSortedLists(LibraryModel library, Scanner scanner) {
+        System.out.println("\n===== Sorted Library Lists =====");
+        System.out.println("1. List of songs sorted by titles");
+        System.out.println("2. List of songs sorted by artists");
+        System.out.println("3. List of songs sorted by rating");
+        System.out.println("4. Back");
+
+        System.out.print("Enter your choice: ");
+
+        String choice = scanner.nextLine();
+        
+        switch (choice) {
+        	// sorted list of songs by title
+        	case "1":
+        		System.out.println(library.getSortedSongsByTitle());
+        		break;
+            // sorted list of songs by artist
+        	case "2":
+        		System.out.println(library.getSortedSongsByArtist());
+        		break;
+        	case "3":
+        	// sorted list of songs by rating
+        		System.out.println(library.getSortedRatings());
+        		break;
+        	case "4":
+        		break;
         }
     }
 

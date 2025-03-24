@@ -11,12 +11,14 @@ final class Song {
 	private final String title;
 	private final String artist;
 	private final String album;
+	private final String genre;
 	
 	// constructor
-	public Song(String title, String artist, String album) {
+	public Song(String title, String artist, String album, String genre) {
 		this.title = title;
 		this.artist = artist;
 		this.album = album;
+		this.genre = genre;
 	}
 	
 	// Getters
@@ -30,6 +32,10 @@ final class Song {
 	
 	public String getAlbum() {
 		return album;
+	}
+	
+	public String getGenre() {
+		return genre;
 	}
 	
 	@Override
