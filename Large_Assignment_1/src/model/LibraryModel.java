@@ -21,9 +21,11 @@ public class LibraryModel {
 	private ArrayList<Song> songs;
 	private ArrayList<PlayList> playlists;
 	private PlayList favorites;
+	private PlayList topRated;
 	private HashMap<Song, Integer> ratings;
 	private ArrayList<Song> recentlyPlayed;
 	private HashMap<Song, Integer> plays;
+	private HashMap<String, Integer> genreCount;
 	
 	// constructor
 	public LibraryModel() throws FileNotFoundException {
@@ -32,9 +34,12 @@ public class LibraryModel {
 		albums = new ArrayList<Album>();
 		playlists = new ArrayList<PlayList>();
 		favorites = new PlayList("favorites");
+		topRated = new PlayList("Top Rated");
+		playlists.add(favorites);
 		ratings = new HashMap<Song, Integer>();
 		recentlyPlayed = new ArrayList<>();
 		plays = new HashMap<Song, Integer>();
+		genreCount = new HashMap<String, Integer>();
 	}
 	
 	/* Searches through the playlist ArrayList for playlists that match
@@ -139,9 +144,64 @@ public class LibraryModel {
 		if (songs.contains(song)) return "Song is already in library";
 		if (song != null) {
 			songs.add(musicStore.getSong(title, artist));
+			maintainGenrePlayLists(song, 1);
+			
 			return "added " + song.toString() + " to library";
 		}
 		return "Song not found in Music Store!";
+	}
+	/* This class maintains the genre playlists, if a genre has more than 10 songs
+	 * in the library, it automatically creates a playlist for that genre, if it drops
+	 * below 10 songs, then the playlist will be deleted
+	 * Arguments:
+	 * 		song: a Song object
+	 * 		intOrDec: a variable that enables the genreCount HashMap to count the number
+	 * 		of songs in a genre. 1 to increment the count, 0 to decrement
+	 */
+	private void maintainGenrePlayLists(Song song, int incOrDec) {
+		if (!genreCount.containsKey(song.getGenre())) {
+			genreCount.put(song.getGenre(), 1);
+		}
+		// increment the count
+		else if (genreCount.containsKey(song.getGenre()) && incOrDec == 1) {
+			genreCount.put(song.getGenre(), genreCount.get(song.getGenre())+1);
+		}
+		// decrement the count
+		else if (genreCount.containsKey(song.getGenre()) && incOrDec == 0) {
+			genreCount.put(song.getGenre(), genreCount.get(song.getGenre())-1);
+		}
+		// create a playlist for that genre as soon as there are 10 songs of the genre
+		for (String genre : genreCount.keySet()) {
+			if (genreCount.get(song.getGenre()) == 10) {
+				PlayList newGenrePlayList = new PlayList(genre);
+				playlists.add(newGenrePlayList);
+				for (Song s : songs) {
+					if (s.getGenre().equals(genre)) newGenrePlayList.addSong(s);;
+				}
+			}
+			// if the genre's playlists already exists then update it
+			else if (genreCount.get(song.getGenre()) > 10) {
+				for (PlayList p : playlists) {
+					if (p.getName().equals(song.getGenre()) && !p.getPlayList().contains(song)) {
+						p.addSong(song);
+					}
+				}
+			}
+			// remove the genre's playlists if there are no longer 10 songs
+			else if (genreCount.get(song.getGenre()) < 10) {
+				PlayList playlistToRemove = null;
+				for (PlayList p : playlists) {
+					if (p.getName().equals(song.getGenre())) {
+						playlistToRemove = p;
+						for (Song s: p.getPlayList()) {
+							p.removeSong(s);
+						}
+					}
+				}
+				if (playlists.contains(playlistToRemove)) playlists.remove(playlistToRemove);
+
+			}
+		}
 	}
 	/* adds an album to the library given the album title and the artist
 	 * of the album
@@ -159,7 +219,7 @@ public class LibraryModel {
 			albums.add(album);
 			// add the songs in the albums to the songs arraylist
 			for (Song s : album.getSongs()) {
-				if (!songs.contains(s)) songs.add(s);	
+				if (!songs.contains(s)) addSong(s.getTitle(), s.getArtist());	
 			}
 			return "added " + album.getTitle() + " by " + album.getArtist() + " to library";
 		}
@@ -178,8 +238,23 @@ public class LibraryModel {
 		Song song = musicStore.getSong(title, artist);
 		// checks if the song is in music store and if the song is in the library.
 		if (song != null && songs.contains(song)) {
-			// automatically favorite the song if the rating is 5
-			if (rating == 5) favorite(title, artist);
+			// automatically favorite the song and add it to the Top Rated PlayList if the rating is 5
+			if (rating == 5) {
+				favorite(title, artist);
+				topRated.addSong(song);
+			}
+			// automatically add the song to Top Rated if the rating is 4+
+			else if (rating >= 4) {
+				topRated.addSong(song);
+				// automatically remove the song from favorites if it was in favorites and the ranting
+				// was changed to under 5
+				if (favorites.getPlayList().contains(song)) favorites.removeSong(song);
+			}
+			else {
+				// if the rating was changed to under 4, remove the song from both the topRated and favorites playlists
+				if (topRated.getPlayList().contains(song)) topRated.removeSong(song);
+				if (favorites.getPlayList().contains(song)) favorites.removeSong(song);
+			}
 			ratings.put(musicStore.getSong(title, artist), rating);
 			return song.toString() + " was rated " + rating;
 		}
@@ -284,6 +359,7 @@ public class LibraryModel {
 			return "Song not found in library.";
 		}
 		songs.remove(song);
+		maintainGenrePlayLists(song, 0);
 		return song.toString() + " removed.";
 	}
 	
@@ -292,6 +368,9 @@ public class LibraryModel {
 		Album album = musicStore.getAlbum(title, artist);
 		if (!(albums.contains(album)) || album.equals(null)) {
 			return "Album not found in library.";
+		}
+		for (Song s: album.getSongs()) {
+			removeSong(s.getTitle(), s.getArtist());
 		}
 		albums.remove(album);
 		return title + " by " + artist + " removed.";
@@ -436,7 +515,14 @@ public class LibraryModel {
 		return result;
 	}
 	
-	// play a song using a title and artist of a song
+	/* play a song using a title and artist of a song and return a message displaying
+	 * which song is being played
+	 * Arguments:
+	 * 		title: the title of a song
+	 * 		artist: the artist of a song
+	 * Returns:
+	 * 		a message of whether a song has successfully been played or not
+	 */
 	public String playSong(String title, String artist) {
 		String result = "";
 		Song song = musicStore.getSong(title, artist);
@@ -457,7 +543,11 @@ public class LibraryModel {
 		return result;
 	}
 	
-	// get the 10 most recently played songs
+	/* get the 10 most recently played songs in the library
+	 * Returns:
+	 * 		result: a list of the 10 most recently played songs, could also be nothing
+	 * 
+	 */
 	public String getRecentlyPlayed() {
 		String result = "Recently played:\n";
 		// add the recentlyPlayed ArrayList backwards to result
@@ -467,7 +557,12 @@ public class LibraryModel {
 		return result;
 	}
 	
-	// get the 10 most played songs
+	/* get the 10 most played songs in the library
+	 * Returns:
+	 * 		result: a list of the 10 most played songs along with the number of times
+	 * 		they have been played for each song.
+	 * 
+	 */
 	public String getMostPlayedSongs() {
 		String result = "";
 	    List<Map.Entry<Song, Integer>> playCount = new ArrayList<>(plays.entrySet());
@@ -485,6 +580,10 @@ public class LibraryModel {
 	    return result;
 	}
 	
+	/* Sorts the songs alphabetically by Song titles. Uses the Collections and Comparator methods to do so
+	 * Returns:
+	 * 		result: a sorted list of songs by title
+	 */
 	public String getSortedSongsByTitle() {
 		String result = "";
 	    ArrayList<Song> sorted = new ArrayList<>(songs);
@@ -496,7 +595,10 @@ public class LibraryModel {
 	    
 	    return result;
 	}
-	
+	/* Sorts the songs alphabetically by Song artists. Uses the Collections and Comparator methods to do so
+	 * Returns:
+	 * 		result: a sorted list of songs by artist
+	 */
 	public String getSortedSongsByArtist() {
 		String result = "";
 	    ArrayList<Song> sorted = new ArrayList<>(songs);
@@ -509,7 +611,10 @@ public class LibraryModel {
 	    return result;
 	}
 	
-	// get a sorted list of ratings of songs in the library that have been rated
+	/* Sorts the songs by the number of plays it has. Uses the Collections library methods to do so
+	 * Returns:
+	 * 		result: a sorted list of songs by playcount
+	 */	
 	public String getSortedRatings() {
 		String result = "";
 	    List<Map.Entry<Song, Integer>> list = new ArrayList<>(ratings.entrySet());
