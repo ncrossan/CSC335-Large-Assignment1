@@ -6,11 +6,13 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class LibraryModel {
 	// instance variables
@@ -124,7 +126,6 @@ public class LibraryModel {
 		}
 		return "Couldn't perform operation.";
 	}
-
 	/* adds a song to the library given the song title and the artist of the song
 	 * Arguments:
 	 * 		title: the name of the song to be added
@@ -142,7 +143,6 @@ public class LibraryModel {
 		}
 		return "Song not found in Music Store!";
 	}
-
 	/* adds an album to the library given the album title and the artist
 	 * of the album
 	 * Arguments:
@@ -436,6 +436,7 @@ public class LibraryModel {
 		return result;
 	}
 	
+	// play a song using a title and artist of a song
 	public String playSong(String title, String artist) {
 		String result = "";
 		Song song = musicStore.getSong(title, artist);
@@ -456,6 +457,7 @@ public class LibraryModel {
 		return result;
 	}
 	
+	// get the 10 most recently played songs
 	public String getRecentlyPlayed() {
 		String result = "Recently played:\n";
 		// add the recentlyPlayed ArrayList backwards to result
@@ -463,6 +465,68 @@ public class LibraryModel {
 			result += recentlyPlayed.get(recentlyPlayed.size()-1-i).toString() + "\n";
 		}
 		return result;
+	}
+	
+	// get the 10 most played songs
+	public String getMostPlayedSongs() {
+		String result = "";
+	    List<Map.Entry<Song, Integer>> playCount = new ArrayList<>(plays.entrySet());
+	    
+	    // sort in descending order
+	    Collections.sort(playCount, Collections.reverseOrder(Map.Entry.comparingByValue()));
+
+	    List<Song> mostPlayed = new ArrayList<>();
+	    for (int i = 0; i < Math.min(10, playCount.size()); i++) {
+	        mostPlayed.add(playCount.get(i).getKey());
+	    }
+	    for (Song s : mostPlayed) {
+	    	result += s.toString() + ": " + plays.get(s) + " plays\n";
+	    }
+	    return result;
+	}
+	
+	public String getSortedSongsByTitle() {
+		String result = "";
+	    ArrayList<Song> sorted = new ArrayList<>(songs);
+	    Collections.sort(sorted, Comparator.comparing(Song::getTitle, String.CASE_INSENSITIVE_ORDER));
+
+	    for (Song s : sorted) {
+	    	result += s.toString() + "\n";
+	    }
+	    
+	    return result;
+	}
+	
+	public String getSortedSongsByArtist() {
+		String result = "";
+	    ArrayList<Song> sorted = new ArrayList<>(songs);
+	    Collections.sort(sorted, Comparator.comparing(Song::getArtist, String.CASE_INSENSITIVE_ORDER));
+	    
+	    for (Song s : sorted) {
+	    	result += s.toString() + "\n";
+	    }
+	    
+	    return result;
+	}
+	
+	// get a sorted list of ratings of songs in the library that have been rated
+	public String getSortedRatings() {
+		String result = "";
+	    List<Map.Entry<Song, Integer>> list = new ArrayList<>(ratings.entrySet());
+
+	    // sort to lowest to highest
+	    Collections.sort(list, Map.Entry.comparingByValue());
+
+	    List<Song> sortedSongs = new ArrayList<>();
+	    for (Map.Entry<Song, Integer> entry : list) {
+	        sortedSongs.add(entry.getKey());
+	    }
+	    
+	    for (Song s : sortedSongs) {
+	    	result += s.toString() + ": " + ratings.get(s) + "\n";;
+	    }
+	    
+	    return result;
 	}
 	
 	// call the methods of musicStore to search it
