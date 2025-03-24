@@ -133,7 +133,6 @@ class LibraryModelTest {
 		LibraryModel library = new LibraryModel();
 		assertEquals(library.searchSongByTitle("Lovesong"), "Lovesong not found in library");
 		library.addSong("He Won't Go", "Adele");
-		assertEquals(library.searchSongByTitle("He Won't Go"), "He Won't Go by Adele in 21");
 		assertEquals(library.searchSongByTitle("He Won't Go"), "He Won't Go by Adele in 21\n");
 	}
 	
