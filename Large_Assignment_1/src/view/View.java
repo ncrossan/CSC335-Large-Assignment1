@@ -43,7 +43,8 @@ public class View {
             System.out.println("6. Manage Playlists");
             System.out.println("7. Mark a Song as Favorite");
             System.out.println("8. Rate a Song");
-            System.out.println("9. Exit Program");
+            System.out.println("9. Play a Song");
+            System.out.println("10. Exit Program");
             System.out.print("Enter your choice with a number: ");
             
             String choice = scanner.nextLine();
@@ -81,8 +82,11 @@ public class View {
             case "8":
                 rateSong(library, scanner);
                 break;
-
             case "9":
+                playSong(library, scanner);
+                break;
+
+            case "10":
             	UserAccountManager.saveUserData(user, library);
                 System.out.println("Exiting...");
                 scanner.close();
@@ -139,6 +143,15 @@ public class View {
             default:
                 System.out.println("Invalid choice.");
         }
+    }
+    
+    private static void playSong(LibraryModel library, Scanner scanner) {
+    	System.out.println("\n===== Play a Song =====");
+    	System.out.print("Enter song title: ");
+        String songTitle = scanner.nextLine();
+        System.out.print("Enter artist: ");
+        String artist = scanner.nextLine();
+        System.out.println(library.playSong(songTitle, artist));
     }
     
     // Search in User Library
@@ -326,7 +339,8 @@ public class View {
         System.out.println("5. List of playlists");
         System.out.println("6. List of favorite songs");
         System.out.println("7. List of sorted songs");
-        System.out.println("8. Back");
+        System.out.println("8. List of recently played");
+        System.out.println("9. Back");
 
         System.out.print("Enter your choice: ");
 
@@ -359,8 +373,11 @@ public class View {
             case "7":
             	getSortedLists(library, scanner);
             	break;
-            // return to main menu
             case "8":
+            	System.out.println(library.getRecentlyPlayed());
+            	break;
+            // return to main menu
+            case "9":
             	break;
             default:
                 System.out.println("Invalid choice.");
