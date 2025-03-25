@@ -112,12 +112,29 @@ class LibraryModelTest {
 	@Test
 	void testGetPlayLists() throws FileNotFoundException {
 		LibraryModel library = new LibraryModel();
-		assertEquals(library.getPlayLists(), "No Playlists yet!");
+		assertEquals(library.getPlayLists(), "Playlists:\n"
+				+ "favorites\n"
+				+ "There are no songs in your playlist!\n"
+				+ "Top Rated\n"
+				+ "There are no songs in your playlist!\n"
+				+ "");
 		library.addPlayList("p1");
-		assertEquals(library.getPlayLists(), "p1\nThere are no songs in your playlist!\n");
+		assertEquals(library.getPlayLists(), "Playlists:\n"
+				+ "favorites\n"
+				+ "There are no songs in your playlist!\n"
+				+ "Top Rated\n"
+				+ "There are no songs in your playlist!\n"
+				+ "p1\n"
+				+ "There are no songs in your playlist!\n");
 		library.addSong("He Won't Go", "Adele");
 		library.addSongToPlayList("p1", "He Won't Go", "Adele");
-		assertEquals(library.getPlayLists(), "p1\nHe Won't Go by Adele\n");
+		assertEquals(library.getPlayLists(), "Playlists:\n"
+				+ "favorites\n"
+				+ "There are no songs in your playlist!\n"
+				+ "Top Rated\n"
+				+ "There are no songs in your playlist!\n"
+				+ "p1\n"
+				+ "He Won't Go by Adele\n");
 	}
 	
 	@Test
@@ -200,7 +217,8 @@ class LibraryModelTest {
 		library.playSong("Rolling in the Deep", "Adele");
 		library.playSong("Rolling in the Deep", "Adele");
 		library.playSong("Rolling in the Deep", "Adele");
-		assertEquals(library.getRecentlyPlayed(), "Rolling in the Deep by Adele\n"
+		assertEquals(library.getRecentlyPlayed(), "Recently played:\n"
+				+ "Rolling in the Deep by Adele\n"
 				+ "Rolling in the Deep by Adele\n"
 				+ "Rolling in the Deep by Adele\n");
 		library.playSong("Turning Tables", "Adele");
@@ -211,7 +229,8 @@ class LibraryModelTest {
 		library.playSong("Lovesong", "Adele");
 		library.playSong("Don't You Remember", "Adele");
 		library.playSong("Set Fire to the Rain", "Adele");
-		assertEquals(library.getRecentlyPlayed(), "Set Fire to the Rain by Adele\n"
+		assertEquals(library.getRecentlyPlayed(), "Recently played:\n"
+				+ "Set Fire to the Rain by Adele\n"
 				+ "Don't You Remember by Adele\n"
 				+ "Lovesong by Adele\n"
 				+ "Rolling in the Deep by Adele\n"
@@ -243,9 +262,10 @@ class LibraryModelTest {
 		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
 				+ "Turning Tables by Adele: 2 plays\n"
 				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n"
 				+ "Lovesong by Adele: 1 plays\n"
 				+ "Set Fire to the Rain by Adele: 1 plays\n"
-				+ "Someone Like You by Adele: 1 plays\n");
+				+ "");
 		library.addAlbum("19", "Adele");
 		library.playSong("Daydreamer", "Adele");
 		library.playSong("Best for Last", "Adele");
@@ -254,15 +274,15 @@ class LibraryModelTest {
 		library.playSong("Melt My Heart to Stone", "Adele");
 		library.playSong("Melt My Heart to Stone", "Adele");
 		assertEquals(library.getMostPlayedSongs(), "Rolling in the Deep by Adele: 4 plays\n"
-				+ "Turning Tables by Adele: 2 plays\n"
 				+ "Melt My Heart to Stone by Adele: 2 plays\n"
+				+ "Turning Tables by Adele: 2 plays\n"
 				+ "Don't You Remember by Adele: 2 plays\n"
+				+ "Someone Like You by Adele: 1 plays\n"
+				+ "Best for Last by Adele: 1 plays\n"
+				+ "Daydreamer by Adele: 1 plays\n"
 				+ "Lovesong by Adele: 1 plays\n"
 				+ "Set Fire to the Rain by Adele: 1 plays\n"
-				+ "Best for Last by Adele: 1 plays\n"
-				+ "Chasing Pavements by Adele: 1 plays\n"
-				+ "Crazy for You by Adele: 1 plays\n"
-				+ "Someone Like You by Adele: 1 plays\n");
+				+ "Crazy for You by Adele: 1 plays\n");
 	}
 	
 	@Test
