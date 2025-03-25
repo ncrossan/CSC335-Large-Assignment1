@@ -341,5 +341,102 @@ class LibraryModelTest {
 				+ "Take It All by Adele: 5\n"
 				+ "One and Only by Adele: 5\n");
 	}
+	
+	@Test
+	void testRemoveSong() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Rolling in the Deep", "Adele");
+		assertEquals("Rolling in the Deep by Adele removed.", library.removeSong("Rolling in the Deep", "Adele"));
+		assertEquals("Song not found in library.", library.removeSong("song1", "artist"));
+	}
+	
+	@Test
+	void testRemoveAlbum() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		assertEquals("21 by Adele removed.", library.removeAlbum("21", "Adele"));
+		assertEquals("Album not found in library.", library.removeAlbum("album", "artist"));
+	}
+	
+	@Test
+	void testGetAlbumInformationBySong() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		library.addSong("Lovesong", "Adele");
+		assertEquals("\n", library.getAlbumInformationBySong("song"));
+		assertEquals("\n21, Adele, Pop, 2011\nRolling in the Deep\n"
+				+ "Rumour Has It\n"
+				+ "Turning Tables\n"
+				+ "Don't You Remember\n"
+				+ "Set Fire to the Rain\n"
+				+ "He Won't Go\n"
+				+ "Take It All\n"
+				+ "I'll Be Waiting\n"
+				+ "One and Only\n"
+				+ "Lovesong\n"
+				+ "Someone Like You\n"
+				+ "I Found a Boy\n"
+				+ "Album in library.\n", library.getAlbumInformationBySong("Lovesong"));
+	}
+	
+	@Test
+	void testSearchSongByGenre() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		assertEquals("Pop songs:\nLovesong by Adele\n", library.searchSongByGenre("Pop"));
+	}
+	
+	@Test
+	void testGetSongListData() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		assertEquals("Songs:\nLovesong, Adele, 21\n", library.getSongListData());
+	}
+	
+	@Test
+	void testGetAlbumListData() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addAlbum("21", "Adele");
+		assertEquals("Albums:\n21, Adele, Pop, 2011\n", library.getAlbumListData());
+	}
+	
+	@Test
+	void testGetPlayListData() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		library.addPlayList("one");
+		library.addSongToPlayList("one", "Lovesong", "Adele");
+		assertEquals("Playlists:\nPlaylist: favorites\nPlaylist: Top Rated\nPlaylist: one\nLovesong, Adele, 21\n", library.getPlayListData());
+	}
+	
+	@Test
+	void testGetFavoritesData() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		library.favorite("Lovesong", "Adele");
+		assertEquals("favorites\nLovesong, Adele, 21\n", library.getFavoritesData());
+	}
+	
+	@Test
+	void testGetRecentlyPlayedData() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		library.playSong("Lovesong", "Adele");
+		assertEquals("Recents:\nLovesong, Adele, 21\n", library.getRecentlyPlayedData());
+	}
+	
+	@Test
+	void testShufflePlaylist() throws FileNotFoundException {
+		LibraryModel library = new LibraryModel();
+		library.addSong("Lovesong", "Adele");
+		library.addSong("Rolling in the Deep", "Adele");
+		library.addSong("Rumour Has It", "Adele");
+		library.addPlayList("one");
+		assertEquals("Playlist not found!", library.shufflePlaylist("two"));
+		library.addSongToPlayList("one", "Lovesong", "Adele");
+		library.addSongToPlayList("one", "Rolling in the Deep", "Adele");
+		library.addSongToPlayList("one", "Rumour Has It", "Adele");
+		assertFalse(library.shufflePlaylist("one").equals("one was shuffled!\nLovesong by Adele\nRolling in the Deep by Adele\nRumour Has It by Adele\n"));
+	}
 
 }

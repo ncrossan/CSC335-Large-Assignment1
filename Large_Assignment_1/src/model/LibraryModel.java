@@ -142,14 +142,14 @@ public class LibraryModel {
 	 */
 	public String addSong(String title, String artist) {
 		Song song = musicStore.getSong(title, artist);
-		Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
-		// add album to library if song is added
-		if (!(albums.contains(album))) albums.add(album);
-		
 		if (songs.contains(song)) return "Song is already in library";
 		if (song != null) {
 			songs.add(song);
 			maintainGenrePlayLists(song, 1);
+			
+			// add album to library if song is added
+			Album album = musicStore.getAlbum(song.getAlbum(), song.getArtist());
+			if (!(albums.contains(album))) albums.add(album);
 			
 			return "added " + song.toString() + " to library";
 		}
@@ -378,7 +378,7 @@ public class LibraryModel {
 	 */
 	public String removeAlbum(String title, String artist) {
 		Album album = musicStore.getAlbum(title, artist);
-		if (!(albums.contains(album)) || album.equals(null)) {
+		if (album == null || !(albums.contains(album))) {
 			return "Album not found in library.";
 		}
 		for (Song s: album.getSongs()) {
@@ -413,7 +413,6 @@ public class LibraryModel {
 	 * 
 	 */
 	public String shufflePlaylist(String playlist) {
-		if (playlists.size() == 0) return "You have no playlists.";
 		
 		for (PlayList p : playlists) {
 			String output = playlist + " was shuffled!\n";
