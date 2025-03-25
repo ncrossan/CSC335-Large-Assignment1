@@ -1,11 +1,8 @@
 /* Authors: Nathan Crossan, Andy Zhang
  * Course: CSC 335
  * Description: the view of the music library
-<<<<<<< HEAD
-=======
  * NOTE: ALL methods were generated using AI, then edited
  * to reduce the number of unwanted outputs.
->>>>>>> refs/remotes/origin/main
  */
 package view;
 import java.io.FileNotFoundException;
