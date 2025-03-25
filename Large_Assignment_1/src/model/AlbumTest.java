@@ -45,5 +45,17 @@ class AlbumTest {
 		Album album = new Album("19", "Adele", "Pop", 2015);
 		assertEquals(album.getYear(), 2015);
 	}
+	
+	@Test
+	void testCopyConstructors() {
+		Album album = new Album("19", "Adele", "Pop", 2015);
+		Album albumCopy = new Album(album);
+		assertEquals(album.getArtist(), albumCopy.getArtist());
+		assertEquals(album.getTitle(), albumCopy.getTitle());
+		assertEquals(album.getGenre(), albumCopy.getGenre());
+		assertTrue(album.getYear() == albumCopy.getYear());
+
+
+	}
 
 }

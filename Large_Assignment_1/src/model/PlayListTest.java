@@ -50,4 +50,14 @@ class PlayListTest {
 		playlist.addSong(musicStore.getSong("My Heart Is Full", "Norah Jones"));
 		assertEquals(playlist.toString(), "test\nMy Heart Is Full by Norah Jones\n");
 	}
+	@Test
+	void testCopyConstructor() throws FileNotFoundException {
+		MusicStore musicStore = new MusicStore();
+		PlayList playlist = new PlayList("test");
+		playlist.addSong(musicStore.getSong("My Heart Is Full", "Norah Jones"));
+		PlayList playlistCopy = new PlayList(playlist);
+		assertEquals(playlistCopy.getName(), playlist.getName());
+		PlayList playlistCopy2 = new PlayList(playlist.getName(), playlist.getPlayList());
+		assertEquals(playlistCopy2.getName(), playlist.getName());
+	}
 }
