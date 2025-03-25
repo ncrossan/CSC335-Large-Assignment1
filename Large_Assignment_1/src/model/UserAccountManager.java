@@ -1,3 +1,9 @@
+/* Authors: Nathan Crossman, Andy Zhang
+ * Course: CSC 335
+ * Description: An instance of this is a static class that prompts a user for login
+ * and handles all data loading/saving for accounts. Files are stored in the Users folder
+ * which is created after this code has ran for the first time.
+ */
 package model;
 import java.io.*;
 import java.security.MessageDigest;
@@ -7,12 +13,12 @@ import java.util.Base64;
 
 public class UserAccountManager {
     private static final String USER_FOLDER = "users";
-    private static File user_file;
     static {
     	// make sure the folder exists
         new File(USER_FOLDER).mkdirs();
     }
-
+    /* This method prompts the user for login or account creation
+     */
     public static String menu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         boolean loggedIn = false;
@@ -62,17 +68,25 @@ public class UserAccountManager {
         }
         return userFile;
     }
-
+    /* initalize the user's file if they create an account, the file is named after
+     * the username.
+     * Arguments:
+     * 		username: a String of the username corresponding to an account
+     */
     public static void initializeUserFile(String username) throws IOException {
         File file = new File(USER_FOLDER + "/" + username + ".txt");
         // create the file if it doesn't exist
         if (!file.exists()) {
             file.createNewFile();
         }
-        user_file = file;
     }
 
-    // write the password to the .pwd file of the user account
+    /* write the password to the .pwd file of the user account after generating the password
+     * using the salt and hash functions
+     * Arguments:
+     *      user: the username of an account
+     * 		library: a LibraryModel instance
+     */
     private static void saveHashedPassword(String username, String password) throws Exception {
         byte[] saltBytes = generateSalt();
         String salt = Base64.getEncoder().encodeToString(saltBytes);
@@ -84,7 +98,12 @@ public class UserAccountManager {
         }
     }
     
-    // write user data to file in users directory
+    /* write user data to file in users directory named after the user that can be loaded later
+     * Arguments:
+     * 		user: the username of an account
+     * 		library: a LibraryModel instance
+     */
+    
     public static void saveUserData(String user, LibraryModel library) throws FileNotFoundException {
     	String output = library.getSongListData() + "\n";
     	output += library.getAlbumListData() + "\n";
@@ -103,7 +122,11 @@ public class UserAccountManager {
     	}
     }
     
-    // load user data to library
+    /* load user data to library after login
+     * Arguments:
+     * 		user: the username of an account
+     * 		library: a LibraryModel instance
+     */
     public static void loadUserData(String user, LibraryModel library) {
     	try {
     		BufferedReader fileReader = new BufferedReader(new FileReader(user));
@@ -159,7 +182,14 @@ public class UserAccountManager {
     	}
     }
     
-    // verify the password for login
+    /* This method verifys the password for login using BufferedReader to read the password
+     * file and the salt and hash functions to determine if the password matches up
+     * Arguments:
+     * 		username: the username of an account
+     * 		password: the password corresponding to the username
+     * Returns:
+     * 		true or false
+     */
     private static boolean verifyPassword(String username, String password) throws Exception {
         File pwdFile = new File(USER_FOLDER + "/" + username + ".pwd");
         if (!pwdFile.exists()) return false;
@@ -171,13 +201,24 @@ public class UserAccountManager {
             return storedHash.equals(computedHash);
         }
     }
-    // hash function
+    /* This method gets the hash value of a String input using MessageDigest
+     * and Base64 libraries and the Secure Hash Algorithm and then returns it
+     * Arguments:
+     * 		input: A String to get the hash of.
+     * Returns:
+     * 		a String containing the hash of the String input
+     */
     private static String hash(String input) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashed = md.digest(input.getBytes("UTF-8"));
         return Base64.getEncoder().encodeToString(hashed);
     }
-    // salt the password
+    /* This function generates a random cryptographic salt.
+     * Uses the SecureRandom function to simulate a random number and fills a
+     * 16 byte array with random bytes, then returns it
+     * Returns:
+     * 		a random salt.
+     */
     private static byte[] generateSalt() {
         SecureRandom sr = new SecureRandom();
         byte[] salt = new byte[16];
